@@ -1,53 +1,44 @@
-import React from 'react';
+import PropTypes from 'prop-types';
 
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
-import {
-  Card,
-  Grid,
-  CardMedia,
-  IconButton,
-  Typography,
-  CardContent,
-  CardActions,
-} from '@mui/material';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 
-import Label from 'src/components/label';
 
 // ----------------------------------------------------------------------
 
-export default function ListMenu() {
+export default function CardDashboard({ title, total, icon, color = 'primary', sx, ...other }) {
   return (
-    <Grid container spacing={3} p={8}>
-      {Array.from({ length: 6 }).map((_, index) => (
-        <Grid item xs={12} sm={6} md={4} lg={4} key={index}>
-          <Card sx={{ maxWidth: 345 }}>
-            <CardMedia
-              component="img"
-              height="250"
-              image="../../../public/assets/images/product/flower43.jpg"
-              alt="Paella dish"
-              sx={{ objectFit: 'fit' }}
-            />
-            <CardContent>
-              <Typography variant="body2" color="text.secondary">
-                This impressive paella is a perfect party dish and a fun meal to cook together with your
-                guests.
-              </Typography>
-            </CardContent>
-            <CardActions disableSpacing>
-              <IconButton aria-label="add to favorites">
-                <FavoriteIcon />
-              </IconButton>
-              <IconButton aria-label="share">
-                <ShoppingCartCheckoutIcon />
-              </IconButton>
+    <Card
+      component={Stack}
+      spacing={3}
+      direction="row"
+      sx={{
+        px: 3,
+        py: 5,
+        borderRadius: 2,
+        ...sx,
+      }}
+      {...other}
+    >
+      {icon && <Box sx={{ width: 64, height: 64 }}>{icon}</Box>}
 
-              <Label sx={{ marginLeft: 'auto', padding: 2 }}>$123</Label>
-            </CardActions>
-          </Card>
-        </Grid>
-      ))}
-    </Grid>
+      <Stack spacing={0.5}>
+        <Typography variant="h4">{total}</Typography>
+
+        <Typography variant="subtitle2" sx={{ color: 'text.disabled' }}>
+          {title}
+        </Typography>
+      </Stack>
+    </Card>
   );
 }
+
+CardDashboard.propTypes = {
+  color: PropTypes.string,
+  icon: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
+  sx: PropTypes.object,
+  title: PropTypes.string,
+  total: PropTypes.any,
+};

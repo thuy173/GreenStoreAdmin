@@ -27,7 +27,7 @@ export const StyledLabel = styled(Box)(({ theme, ownerState }) => {
       }),
       // SOFT
       ...(softVariant && {
-        color: "#f47c7c",
+        color: "#3b413a",
         backgroundColor: alpha(theme.palette.grey[500], 0.16),
       }),
     }),

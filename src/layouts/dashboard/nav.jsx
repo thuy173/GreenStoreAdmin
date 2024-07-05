@@ -151,11 +151,11 @@ function NavItem({ item }) {
           textTransform: 'capitalize',
           fontWeight: 'fontWeightMedium',
           ...(active && {
-            color: 'primary.main',
+            color: '#3b413a',
             fontWeight: 'fontWeightSemiBold',
-            bgcolor: (theme) => alpha(theme.palette.primary.main, 0.08),
+            bgcolor: '#edeff1',
             '&:hover': {
-              bgcolor: (theme) => alpha(theme.palette.primary.main, 0.16),
+              bgcolor: '#edeff1',
             },
           }),
         }}
@@ -189,11 +189,11 @@ function NavItem({ item }) {
                 textTransform: 'capitalize',
                 fontWeight: 'fontWeightMedium',
                 ...(child.path === pathname && {
-                  color: 'primary.main',
+                  color: '#3b413a',
                   fontWeight: 'fontWeightSemiBold',
-                  bgcolor: (theme) => alpha(theme.palette.primary.main, 0.08),
+                  bgcolor: '#edeff1',
                   '&:hover': {
-                    bgcolor: (theme) => alpha(theme.palette.primary.main, 0.16),
+                    bgcolor: '#edeff1',
                   },
                 }),
               }}
