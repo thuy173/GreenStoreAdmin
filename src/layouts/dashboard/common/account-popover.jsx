@@ -1,5 +1,5 @@
-import { useState } from 'react';
-// import { useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
@@ -11,30 +11,23 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 
-import { account } from 'src/_mock/account';
-// import { logOut } from 'src/redux/actions/authActions';
-// import { clearLocalStorage } from 'src/services/agent';
-
-// ----------------------------------------------------------------------
-
-const MENU_OPTIONS = [
-  {
-    label: 'Profile',
-    icon: 'eva:person-fill',
-  },
-  // {
-  //   label: 'Settings',
-  //   icon: 'eva:settings-2-fill',
-  // },
-];
-
-// ----------------------------------------------------------------------
+import { logOut } from 'src/redux/actions/authActions';
+import { getLocalStorage, clearLocalStorage } from 'src/services/agent';
 
 export default function AccountPopover() {
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(null);
+  const [userId, setUserId] = useState('');
+  const [roleUser, setRoleUser] = useState('');
+
+  useEffect(() => {
+    const storedUserId = getLocalStorage('uD');
+    setUserId(storedUserId);
+    const storeRole = getLocalStorage('rE');
+    setRoleUser(storeRole);
+  }, []);
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -44,17 +37,14 @@ export default function AccountPopover() {
     setOpen(null);
   };
 
-  // const handleLogout = () => {
-  //   clearLocalStorage();
-  //   dispatch(logOut(navigate));
-  // };
-  const handleLogin = () => {
-    handleClose();
-    navigate('/login');
+  const handleLogout = () => {
+    clearLocalStorage();
+    dispatch(logOut(navigate));
   };
+
   const handleProfileClick = () => {
     handleClose();
-    navigate('/teacherProfile');
+    navigate(`/teacherProfile/${userId}`);
   };
 
   return (
@@ -72,15 +62,15 @@ export default function AccountPopover() {
         }}
       >
         <Avatar
-          src={account.photoURL}
-          alt={account.displayName}
+          src=""
+          alt=""
           sx={{
             width: 36,
             height: 36,
             border: (theme) => `solid 2px ${theme.palette.background.default}`,
           }}
         >
-          {account.displayName.charAt(0).toUpperCase()}
+          T
         </Avatar>
       </IconButton>
 
@@ -101,30 +91,25 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2 }}>
           <Typography variant="subtitle2" noWrap>
-            {account.displayName}
+            T
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {account.email}
+            T
           </Typography>
         </Box>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        {MENU_OPTIONS.map((option) => (
-          <MenuItem key={option.label} onClick={handleProfileClick}>
-            {option.label}
-          </MenuItem>
-        ))}
+        {roleUser !== 'Admin' && <MenuItem onClick={handleProfileClick}>Profile</MenuItem>}
 
         <Divider sx={{ borderStyle: 'dashed', m: 0 }} />
-
         <MenuItem
           disableRipple
           disableTouchRipple
-          onClick={handleLogin}
+          onClick={handleLogout}
           sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
         >
-          Login
+          Logout
         </MenuItem>
       </Popover>
     </>

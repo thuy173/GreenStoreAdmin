@@ -1,9 +1,9 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: 'http://209.145.62.69:2003/api/admin/',
-  // baseURL: 'http://192.168.1.92:2003/api/admin/',
+  baseURL: 'http://localhost:8086/api/',
   timeout: 60000,
+  withCredentials: true,
 });
 
 // INTERCEPTORS CONFIG START

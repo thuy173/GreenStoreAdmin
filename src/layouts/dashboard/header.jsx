@@ -1,27 +1,19 @@
-import { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import { ListItemButton } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 
-import { usePathname } from 'src/routes/hooks';
-import { RouterLink } from 'src/routes/components';
-
-import Logo from 'src/components/logo';
-
-import Cart from './common/cart';
 import { bgBlur } from '../../theme/css';
 // import Searchbar from './common/searchbar';
-import headerConfig from './config-header';
 import { NAV, HEADER } from './config-layout';
 import Iconify from '../../components/iconify';
 import AccountPopover from './common/account-popover';
-// import LanguagePopover from './common/language-popover';
+import LanguagePopover from './common/language-popover';
+// import NotificationsPopover from './common/notifications-popover';
 import { useResponsive } from '../../components/hooks/use-responsive';
 
 // ----------------------------------------------------------------------
@@ -31,13 +23,6 @@ export default function Header({ onOpenNav }) {
 
   const lgUp = useResponsive('up', 'lg');
 
-  const renderMenu = (
-    <Stack direction="row" component="nav" spacing={0.5} sx={{ px: 2, position: 'relative' }}>
-      {headerConfig.map((item) => (
-        <NavItem key={item.title} item={item} />
-      ))}
-    </Stack>
-  );
   const renderContent = (
     <>
       {!lgUp && (
@@ -45,18 +30,14 @@ export default function Header({ onOpenNav }) {
           <Iconify icon="eva:menu-2-fill" />
         </IconButton>
       )}
-      <Box>{renderMenu}</Box>
 
       {/* <Searchbar /> */}
-      <Box sx={{ flexGrow: 1 }} />
-
-      <Logo sx={{ mr: 28 }} />
 
       <Box sx={{ flexGrow: 1 }} />
 
-      <Stack direction="row" alignItems="center" spacing={2}>
-        <Cart />
-        {/* <LanguagePopover /> */}
+      <Stack direction="row" alignItems="center" spacing={1}>
+        <LanguagePopover />
+        {/* <NotificationsPopover /> */}
         <AccountPopover />
       </Stack>
     </>
@@ -65,7 +46,6 @@ export default function Header({ onOpenNav }) {
   return (
     <AppBar
       sx={{
-        minWidth: '100%',
         boxShadow: 'none',
         height: HEADER.H_MOBILE,
         zIndex: theme.zIndex.appBar + 1,
@@ -95,103 +75,4 @@ export default function Header({ onOpenNav }) {
 
 Header.propTypes = {
   onOpenNav: PropTypes.func,
-};
-function NavItem({ item }) {
-  const pathname = usePathname();
-  // const active = item.path === pathname;
-
-  const [openMenu, setOpenMenu] = useState(false);
-  const handleClick = () => setOpenMenu(!openMenu);
-  // const handleMouseEnter = () => setOpenMenu(true);
-  // const handleMouseLeave = () => setOpenMenu(false);
-  return (
-    <Box
-      // onMouseEnter={item.children ? handleMouseEnter : undefined}
-      // onMouseLeave={item.children ? handleMouseLeave : undefined}
-      // sx={{ position: 'relative' }}
-    >
-      <ListItemButton
-        onClick={item.children ? handleClick : undefined}
-        component={RouterLink}
-        href={item.path}
-        sx={{
-          minHeight: 35,
-          borderRadius: 0.75,
-          typography: 'body1',
-          color: '#F47C7C',
-          textTransform: 'capitalize',
-          fontWeight: 'fontWeightMedium',
-          // ...(active && {
-          //   color: '#F47C7C',
-          //   fontWeight: 'fontWeightSemiBold',
-          //   bgcolor: '#FFE3E1',
-          //   '&:hover': {
-          //     bgcolor: '#FAD4D4',
-          //   },
-          // }),
-        }}
-      >
-        {/* <Box component="span" sx={{ width: 20, height: 20, mr: 2 }}>
-          {item.icon}
-        </Box> */}
-
-        <Box component="span">{item.title}</Box>
-
-        {item.children && (
-          <Box component="span" sx={{ width: 20, height: 20, ml: 1 }}>
-            {item.iconRight}
-          </Box>
-        )}
-      </ListItemButton>
-
-      {openMenu && item.children && (
-        <Box
-          sx={{
-            position: 'absolute',
-            mt: 1,
-            boxShadow: 3,
-            borderRadius: 1,
-            bgcolor: 'background.paper',
-            zIndex: 1,
-          }}
-        >
-          <Stack>
-            {item.children.map((child) => (
-              <ListItemButton
-                key={child.title}
-                component={RouterLink}
-                href={child.path}
-                sx={{
-                  minHeight: 30,
-                  borderRadius: 0.75,
-                  typography: 'body2',
-                  color: '#F47C7C',
-                  textTransform: 'capitalize',
-                  fontWeight: 'fontWeightMedium',
-                  ...(child.path === pathname && {
-                    color: '#F47C7C',
-                    fontWeight: 'fontWeightSemiBold',
-                    bgcolor: '#faf5f6',
-                    '&:hover': {
-                      bgcolor: '#FAD4D4',
-                    },
-                  }),
-                }}
-              >
-                <Box component="span" sx={{ width: 20, height: 20, mr: 1 }}>
-                  {child.icon}
-                </Box>
-
-                <Box component="span">{child.title}</Box>
-              </ListItemButton>
-            ))}
-          </Stack>
-        </Box>
-      )}
-    </Box>
-  );
-}
-
-NavItem.propTypes = {
-  item: PropTypes.object,
 };

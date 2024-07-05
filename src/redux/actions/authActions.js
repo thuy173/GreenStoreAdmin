@@ -29,10 +29,8 @@ export const login = (credentials, navigate) => async (dispatch) => {
     const accessToken = response.data;
 
     if (accessToken !== undefined) {
-      // Lưu token vào localStorage
       setLocalStorage('accessToken', accessToken);
 
-      // Dispatch action loginSuccess để cập nhật state Redux với token mới
       dispatch(loginSuccess(accessToken));
 
       navigate('/');

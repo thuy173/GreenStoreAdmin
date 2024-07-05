@@ -28,7 +28,7 @@ const LoginView = (props) => {
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const { isLoggedIn } = useSelector(state => state.auth);
@@ -36,7 +36,7 @@ const LoginView = (props) => {
   const handleLogin = (e) => {
     e.preventDefault();
 
-    const credentials = { username, password };
+    const credentials = { email, password };
     dispatch(login(credentials, navigate));
   };
 
@@ -49,9 +49,9 @@ const LoginView = (props) => {
       <Stack spacing={3}>
         <TextField
           name="email"
-          label="Username"
-          value={username} 
-          onChange={(e) => setUsername(e.target.value)} 
+          label="Email"
+          value={email} 
+          onChange={(e) => setEmail(e.target.value)} 
         />
 
         <TextField
@@ -114,7 +114,7 @@ const LoginView = (props) => {
             flexDirection: 'column',
           }}
         >
-          <Typography variant="h4" sx={{ textAlign: 'center' }}>Login flower shop</Typography>
+          <Typography variant="h4" sx={{ textAlign: 'center' }}>Login</Typography>
           {renderForm}
         </Card>
       </Stack>

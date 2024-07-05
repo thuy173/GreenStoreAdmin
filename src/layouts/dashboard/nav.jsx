@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Drawer from '@mui/material/Drawer';
-// import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import { alpha } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
@@ -13,7 +12,6 @@ import ListItemButton from '@mui/material/ListItemButton';
 import { NAV } from './config-layout';
 import Logo from '../../components/logo';
 import navConfig from './config-navigation';
-import { account } from '../../_mock/account';
 import { usePathname } from '../../routes/hooks';
 import Scrollbar from '../../components/scrollbar';
 import { RouterLink } from '../../routes/components';
@@ -46,15 +44,19 @@ export default function Nav({ openNav, onCloseNav }) {
         bgcolor: (theme) => alpha(theme.palette.grey[500], 0.12),
       }}
     >
-      <Avatar src={account.photoURL} alt="photoURL" />
+      <Avatar
+        src=""
+        alt=""
+        sx={{
+          width: 36,
+          height: 36,
+          border: (theme) => `solid 2px ${theme.palette.background.default}`,
+        }}
+      />
 
-      <Box sx={{ ml: 2 }}>
-        <Typography variant="subtitle2">{account.displayName}</Typography>
-
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          {account.role}
-        </Typography>
-      </Box>
+      <Typography variant="subtitle2" sx={{ my: 1.5, px: 2 }}>
+        Admin
+      </Typography>
     </Box>
   );
 
