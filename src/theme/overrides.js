@@ -63,8 +63,8 @@ export function overrides(theme) {
           color: '#26643b',
           backgroundColor: '#fff',
           '&:hover': {
-            color: '#26643b',
-            backgroundColor: '#fff',
+            color: '#fff',
+            backgroundColor: '#26643b',
           },
         },
         sizeLarge: {
@@ -119,6 +119,7 @@ export function overrides(theme) {
       styleOverrides: {
         tooltip: {
           backgroundColor: '#f5fcf4',
+          color: '#3b413a',
         },
         arrow: {
           color: '#3b413a',

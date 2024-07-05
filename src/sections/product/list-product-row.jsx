@@ -106,12 +106,12 @@ export default function ListProductRow({
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <MenuItem onClick={handleEditNews}>
-          <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
+          <Iconify icon="eva:edit-fill" width={22} sx={{ mr: 2 }} />
           Edit
         </MenuItem>
 
         <MenuItem onClick={handleOpenDeleteDialog} sx={{ color: 'error.main' }}>
-          <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
+          <Iconify icon="eva:trash-2-outline" width={22} sx={{ mr: 2 }} />
           Delete
         </MenuItem>
       </Popover>

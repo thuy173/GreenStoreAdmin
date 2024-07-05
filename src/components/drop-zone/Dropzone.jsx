@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { useDropzone } from 'react-dropzone';
 
-import { Box, IconButton } from '@mui/material';
 import RemoveIcon from '@mui/icons-material/Remove';
+import { Box, Stack, IconButton } from '@mui/material';
+
+import Iconify from '../iconify';
 
 const Dropzone = ({ onDrop, imagePreview, setImagePreview, onDropzoneClose }) => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -42,7 +44,7 @@ const Dropzone = ({ onDrop, imagePreview, setImagePreview, onDropzoneClose }) =>
         <div style={{ position: 'relative' }}>
           <img
             src={imagePreview}
-            alt="Preview"
+            alt="Hi"
             style={{ width: 200, borderRadius: 4, objectFit: 'fit' }}
           />
           <IconButton
@@ -59,7 +61,10 @@ const Dropzone = ({ onDrop, imagePreview, setImagePreview, onDropzoneClose }) =>
           </IconButton>
         </div>
       ) : (
-        <p>Drag and drop photos here or click to upload</p>
+        <Stack direction="column" spacing={2} justifyItems="center" alignItems="center">
+          <Iconify icon="humbleicons:upload" width={22} />
+          Drag and drop upload photos
+        </Stack>
       )}
     </Box>
   );

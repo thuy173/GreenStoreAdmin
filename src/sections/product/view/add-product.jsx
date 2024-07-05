@@ -11,11 +11,13 @@ import {
   Stack,
   Button,
   Select,
+  Tooltip,
   MenuItem,
   Checkbox,
   TextField,
   Typography,
   InputLabel,
+  IconButton,
   Breadcrumbs,
   FormControl,
   Autocomplete,
@@ -142,8 +144,12 @@ const AddProductView = () => {
   };
 
   const handleAddImage = () => {
-    setNumImage((prevNum) => prevNum + 1);
-    setImagePreviewProduct((prevPreviews) => [...prevPreviews, null]);
+    if (numImage < 10) {
+      setNumImage((prevNum) => prevNum + 1);
+      setImagePreviewProduct((prevPreviews) => [...prevPreviews, null]);
+    } else {
+      showAlert('error', 'Do not add more than 10 photos');
+    }
   };
 
   const handleDeleteImages = (index) => {
@@ -472,19 +478,25 @@ const AddProductView = () => {
                         </Select>
                       </FormControl>
                     </Stack>
-                    <Stack direction="column" spacing={2}>
-                      <Typography variant="h6">Product image</Typography>
-                      {Array.from({ length: numImage }).map((_, index) => (
-                        <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>
-                          <Button
-                            color="error"
-                            onClick={() => handleDeleteImages(index)}
-                            sx={{ margin: -1.5 }}
-                          >
-                            <Iconify icon="eva:trash-2-fill" />
-                          </Button>
-                          <Grid item xs={6} sx={{ ml: 3, pb: 5 }}>
-                            <Stack direction="column" spacing={2}>
+                    <Stack direction="column" spacing={2} justifyItems="start" alignItems="start">
+                      <Tooltip title="Add image product" placement="right-start">
+                        <IconButton variant="text" onClick={handleAddImage}>
+                          <Iconify icon="fluent:image-add-20-regular" width={35} />
+                        </IconButton>
+                      </Tooltip>
+                      <Grid item container>
+                        {Array.from({ length: numImage }).map((_, index) => (
+                          <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>
+                            <Tooltip title="Delete">
+                              <IconButton
+                                color="error"
+                                onClick={() => handleDeleteImages(index)}
+                                sx={{ margin: -2 }}
+                              >
+                                <Iconify icon="uil:minus" width={22} />
+                              </IconButton>
+                            </Tooltip>
+                            <Grid item xs={6} sx={{ ml: 2, pb: 1 }}>
                               <DropZone
                                 onDrop={(files) => handleImageUpload(files, index)}
                                 imagePreview={imagePreviewProduct[index]}
@@ -496,21 +508,10 @@ const AddProductView = () => {
                                   })
                                 }
                               />
-                            </Stack>
-                          </Grid>
-                        </Box>
-                      ))}
-                      <Stack>
-                        <Button
-                          sx={{ width: '21%', marginLeft: '40px' }}
-                          variant="contained"
-                          color="primary"
-                          onClick={handleAddImage}
-                          startIcon={<Iconify icon="eva:plus-fill" />}
-                        >
-                          Add image
-                        </Button>
-                      </Stack>
+                            </Grid>
+                          </Box>
+                        ))}
+                      </Grid>
                     </Stack>
                   </Stack>
 
@@ -521,7 +522,7 @@ const AddProductView = () => {
                         size="large"
                         type="submit"
                         variant="contained"
-                        color="primary"
+                        color="success"
                       >
                         Add product
                       </Button>
