@@ -8,36 +8,29 @@ const icon = (name) => (
 
 const navConfig = [
   {
-    title: 'Shop',
+    title: 'Dashboard',
     path: '/',
-    icon: icon('ic_analytics'),
+    icon: icon('ic_dashboard'),
+  },
+  {
+    title: 'Category',
+    path: '/category',
+    icon: icon('ic_category'),
   },
   {
     title: 'Product',
-    icon: icon('ic_applicationUI'),
-    iconRight: icon('ic_arrdown'),
-    children: [
-      {
-        title: 'Product',
-        path: '/product',
-        icon: icon('ic_slide'),
-      },
-      {
-        title: 'News',
-        path: '/product',
-        icon: icon('ic_news'),
-      },
-      {
-        title: 'News',
-        path: '/product',
-        icon: icon('ic_partners'),
-      },
-    ],
+    path: '/product',
+    icon: icon('ic_fruit'),
   },
   {
-    title: 'News',
-    path: '/product',
-    icon: icon('ic_course'),
+    title: 'Order',
+    path: '/order',
+    icon: icon('ic_order'),
+  },
+  {
+    title: 'Customer',
+    path: '/customer',
+    icon: icon('ic_user'),
   },
 ];
 

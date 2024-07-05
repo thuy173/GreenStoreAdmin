@@ -2,11 +2,11 @@ import { useSelector } from 'react-redux';
 import { Helmet } from 'react-helmet-async';
 import { Navigate } from 'react-router-dom';
 
-import ListProductView from 'src/sections/product/view/list-product-view';
+import AddProductView from 'src/sections/product/view/add-product';
 
 // ----------------------------------------------------------------------
 
-const ProductPage = () => {
+const AddProductPage = () => {
   const { accessToken: currentToken } = useSelector((state) => state.auth);
 
   if (!currentToken) {
@@ -16,12 +16,12 @@ const ProductPage = () => {
   return (
     <>
       <Helmet>
-        <title>Product | GreenStore</title>
+        <title>Add Product | GreenStore</title>
       </Helmet>
 
-      <ListProductView />
+      <AddProductView />
     </>
   );
 };
 
-export default ProductPage;
+export default AddProductPage;

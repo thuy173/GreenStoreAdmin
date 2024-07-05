@@ -1,1 +1,1 @@
-export { default as ProductMain } from './main';
+export { default as ProductMain } from './list-product-view';
