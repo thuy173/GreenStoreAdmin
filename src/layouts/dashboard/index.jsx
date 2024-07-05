@@ -1,0 +1,46 @@
+// import { useState } from 'react';
+import PropTypes from 'prop-types';
+// import { useSelector } from 'react-redux';
+// import { Navigate } from 'react-router-dom';
+
+import Box from '@mui/material/Box';
+
+// import Nav from './nav';
+import Main from './main';
+import Header from './header';
+import Footer from './footer';
+
+// ----------------------------------------------------------------------
+
+export default function DashboardLayout({ children }) {
+  // const { accessToken: currentToken } = useSelector((state) => state.auth);
+  // const [openNav, setOpenNav] = useState(false);
+
+  // if (!currentToken) {
+  //   return <Navigate to="/login" />;
+  // }
+
+  return (
+    <>
+      {/* <Header onOpenNav={() => setOpenNav(true)} /> */}
+      <Header />
+
+      <Box
+        sx={{
+          minHeight: 1,
+          display: 'flex',
+          flexDirection: { xs: 'column', lg: 'row' },
+        }}
+      >
+        {/* <Nav openNav={openNav} onCloseNav={() => setOpenNav(false)} /> */}
+
+        <Main>{children}</Main>
+      </Box>
+      <Footer />
+    </>
+  );
+}
+
+DashboardLayout.propTypes = {
+  children: PropTypes.node,
+};
