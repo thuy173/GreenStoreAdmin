@@ -68,8 +68,8 @@ export default function ListProductRow({
     }
   };
 
-  const handleEditNews = () => {
-    navigate(`/book/editBook/${productId}`);
+  const handleEditProduct = () => {
+    navigate(`/product/edit/${productId}`);
   };
 
   return (
@@ -114,9 +114,9 @@ export default function ListProductRow({
         anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <MenuItem onClick={handleEditNews}>
-          <Iconify icon="eva:edit-fill" width={22} sx={{ mr: 2 }} />
-          Edit
+        <MenuItem onClick={handleEditProduct}>
+          <Iconify icon="dashicons:update-alt" width={22} sx={{ mr: 2 }} />
+          Update
         </MenuItem>
 
         <MenuItem onClick={handleShow}>

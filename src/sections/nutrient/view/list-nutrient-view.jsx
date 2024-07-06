@@ -8,7 +8,6 @@ import Typography from '@mui/material/Typography';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import {
   Box,
@@ -221,7 +220,6 @@ const ListNutrientView = () => {
         <Breadcrumbs separator={<NavigateNextIcon fontSize="large" />} aria-label="breadcrumb">
           <Link href="/">
             <Stack direction="row" alignItems="center">
-              <HomeRoundedIcon sx={{ mr: 0.5 }} fontSize="medium" />
               <Typography variant="body1">Dashboard</Typography>
             </Stack>
           </Link>

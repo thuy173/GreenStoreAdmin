@@ -10,7 +10,6 @@ import Breadcrumbs from '@mui/material/Breadcrumbs';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 import { Button, TableRow, TableCell } from '@mui/material';
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
 import { emptyRows, applyFilter, getComparator } from 'src/utils/tableUtils';
@@ -106,7 +105,7 @@ const ListProductView = () => {
   };
 
   const handleAddProduct = () => {
-    navigate('/product/addProduct');
+    navigate('/product/add');
   };
 
   const fetchProductData = async () => {
@@ -190,7 +189,6 @@ const ListProductView = () => {
         <Breadcrumbs separator={<NavigateNextIcon fontSize="large" />} aria-label="breadcrumb">
           <Link href="/">
             <Stack direction="row" alignItems="center">
-              <HomeRoundedIcon sx={{ mr: 0.5 }} fontSize="medium" />
               <Typography variant="body1">Dashboard</Typography>
             </Stack>
           </Link>

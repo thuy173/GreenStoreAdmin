@@ -5,7 +5,6 @@ import React, { useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Unstable_Grid2';
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import {
   Stack,
@@ -223,8 +222,8 @@ const AddProductView = () => {
         formData.append('expiryDate', formatTime(formattedExpiryDate));
       }
 
-      imageData.answerFiles.forEach((fileArray, index) => {
-        fileArray.forEach((file, fileIndex) => {
+      imageData.answerFiles.forEach((fileArray) => {
+        fileArray.forEach((file) => {
           formData.append(`productImages`, file);
         });
       });
@@ -297,7 +296,6 @@ const AddProductView = () => {
               >
                 <Link href="/">
                   <Stack direction="row" alignItems="center">
-                    <HomeRoundedIcon sx={{ mr: 0.5 }} fontSize="medium" />
                     <Typography variant="body1">Dashboard</Typography>
                   </Stack>
                 </Link>
@@ -450,6 +448,7 @@ const AddProductView = () => {
                           value={selectedCategory || ''}
                           onChange={(e) => setSelectedCategory(e.target.value)}
                           label="category"
+                          MenuProps={MenuProps}
                         >
                           {category.map((c) => (
                             <MenuItem key={c.categoryId} value={c.categoryId}>
