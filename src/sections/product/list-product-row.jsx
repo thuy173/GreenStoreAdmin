@@ -29,6 +29,7 @@ export default function ListProductRow({
   status,
   selected,
   onHide,
+  onShow,
 }) {
   const navigate = useNavigate();
 
@@ -57,6 +58,13 @@ export default function ListProductRow({
       handleCloseHideDialog();
     } catch (error) {
       console.error('Failed to hide product:', error);
+    }
+  };
+  const handleShow = async () => {
+    try {
+      await onShow(productId);
+    } catch (error) {
+      console.error('Failed to show product:', error);
     }
   };
 
@@ -111,6 +119,10 @@ export default function ListProductRow({
           Edit
         </MenuItem>
 
+        <MenuItem onClick={handleShow}>
+          <Iconify icon="bxs:show" width={22} sx={{ mr: 2 }} />
+          Show
+        </MenuItem>
         <MenuItem onClick={handleOpenHideDialog} sx={{ color: 'error.main' }}>
           <Iconify icon="bxs:hide" width={22} sx={{ mr: 2 }} />
           Hidden
@@ -152,4 +164,5 @@ ListProductRow.propTypes = {
   status: PropTypes.bool,
   selected: PropTypes.any,
   onHide: PropTypes.func,
+  onShow: PropTypes.func,
 };

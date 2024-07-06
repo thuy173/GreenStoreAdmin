@@ -123,8 +123,8 @@ const ListProductView = () => {
   const handleHideRow = async (id) => {
     try {
       const response = await ProductServices.hideData(id);
-      if (response && response.status === 200) {
-        showAlert('success', 'Delete product successfully!');
+      if (response && response.status === 204) {
+        showAlert('success', 'Hidden product successfully!');
         fetchProductData();
       } else {
         setAlert({
@@ -134,7 +134,29 @@ const ListProductView = () => {
         });
       }
     } catch (error) {
-      console.error('Failed to delete product:', error);
+      console.error('Failed to hide product:', error);
+      setAlert({
+        message: error.message || 'An error occurred.',
+        severity: 'error',
+        isOpen: true,
+      });
+    }
+  };
+  const handleShow = async (id) => {
+    try {
+      const response = await ProductServices.showData(id);
+      if (response && response.status === 204) {
+        showAlert('success', 'Show product successfully!');
+        fetchProductData();
+      } else {
+        setAlert({
+          message: response?.response?.data?.message || 'An error occurred. Please check again!',
+          severity: 'error',
+          isOpen: true,
+        });
+      }
+    } catch (error) {
+      console.error('Failed to show product:', error);
       setAlert({
         message: error.message || 'An error occurred.',
         severity: 'error',
@@ -226,6 +248,7 @@ const ListProductView = () => {
                         selected={selected.indexOf(item.productId) !== -1}
                         handleClick={(event) => handleClick(event, item.productId)}
                         onHide={handleHideRow}
+                        onShow={handleShow}
                       />
                     ))}
 

@@ -1,4 +1,4 @@
-import { getApi, putApi, postApi2, deleteApi } from './agent';
+import { getApi, putApi, putApi2, postApi2, deleteApi } from './agent';
 
 const ProductServices = {
   getAll: async () => {
@@ -33,6 +33,16 @@ const ProductServices = {
   editData: async (id, payload) => {
     try {
       const result = await putApi(`product/${id}`, payload);
+      return result;
+    } catch (error) {
+      console.log(error);
+    }
+    return null;
+  },
+
+  showData: async (id) => {
+    try {
+      const result = await putApi2(`product/active/${id}`, '');
       return result;
     } catch (error) {
       console.log(error);
