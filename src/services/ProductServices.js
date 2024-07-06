@@ -49,6 +49,16 @@ const ProductServices = {
     }
     return null;
   },
+  
+  changeImage: async (productId, index, payload) => {
+    try {
+      const result = await putApi(`product/${productId}/images/${index}`, payload);
+      return result;
+    } catch (error) {
+      console.log(error);
+    }
+    return null;
+  },
 
   showData: async (id) => {
     try {

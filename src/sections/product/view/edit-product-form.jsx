@@ -6,6 +6,7 @@ import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Unstable_Grid2';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import FlipCameraIosIcon from '@mui/icons-material/FlipCameraIos';
 import {
   Card,
   Stack,
@@ -17,6 +18,7 @@ import {
   TextField,
   Typography,
   InputLabel,
+  IconButton,
   Breadcrumbs,
   FormControl,
   Autocomplete,
@@ -32,6 +34,8 @@ import NutrientServices from 'src/services/NutrientServices';
 import Link from 'src/components/link';
 import DropZone from 'src/components/drop-zone';
 import CustomSnackbar from 'src/components/snackbar/snackbar';
+
+import ChangeImageProduct from './change-image';
 
 function formatTime(date) {
   const years = date.getUTCFullYear();
@@ -69,6 +73,9 @@ const EditProductForm = ({ initialValues, onLoadData }) => {
   const [selectNutrient, setSelectNutrient] = useState(
     initialValues.nutrients ? initialValues.nutrients.map((n) => n.nutrientId) : []
   );
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [openChangeImage, setOpenChangeImage] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(null);
 
   const handleCloseAlert = () => {
     setAlert({ message: null, severity: 'success', isOpen: false });
@@ -80,6 +87,16 @@ const EditProductForm = ({ initialValues, onLoadData }) => {
 
   const handleDropzoneClose = () => {
     setImages(null);
+  };
+
+  const handleOpenChangeImage = (index) => {
+    setOpenChangeImage(true);
+    setSelectedIndex(index);
+  };
+
+  const handleCloseChangeImage = () => {
+    setOpenChangeImage(false);
+    setSelectedIndex(null);
   };
 
   const isEndTimeValid = () => {
@@ -172,14 +189,14 @@ const EditProductForm = ({ initialValues, onLoadData }) => {
         navigate('/product');
       } else {
         setAlert({
-          message: response?.response?.data?.message || 'Đã xảy ra lỗi. Vui lòng kiểm tra lại!',
+          message: response?.response?.data?.message || 'An error occurred. Please check again!',
           severity: 'error',
           isOpen: true,
         });
       }
     } catch (error) {
       setAlert({
-        message: error.message || 'Đã xảy ra lỗi.',
+        message: error.message || 'An error occurred.',
         severity: 'error',
         isOpen: true,
       });
@@ -424,7 +441,7 @@ const EditProductForm = ({ initialValues, onLoadData }) => {
                     </Stack>
                   </Grid>
                   <Grid item container spacing={2} px={2}>
-                    {initialValues.productImages.map((image) => (
+                    {initialValues.productImages.map((image, index) => (
                       <Grid item xs={6} md={4} lg={3} key={image.productImageId}>
                         <Card
                           style={{
@@ -436,7 +453,10 @@ const EditProductForm = ({ initialValues, onLoadData }) => {
                             justifyContent: 'center',
                             alignItems: 'center',
                             border: '1px solid #507c5c',
+                            position: 'relative',
                           }}
+                          onMouseEnter={() => setHoveredIndex(index)}
+                          onMouseLeave={() => setHoveredIndex(null)}
                         >
                           <img
                             src={image.imageUrl}
@@ -447,9 +467,31 @@ const EditProductForm = ({ initialValues, onLoadData }) => {
                               objectFit: 'fit',
                             }}
                           />
+                          {hoveredIndex === index && (
+                            <IconButton
+                              style={{
+                                position: 'absolute',
+                                top: '10px',
+                                right: '10px',
+                                backgroundColor: '#edeff1',
+                              }}
+                              onClick={() => handleOpenChangeImage(index)}
+                            >
+                              <FlipCameraIosIcon />
+                            </IconButton>
+                          )}
                         </Card>
                       </Grid>
                     ))}
+                    {openChangeImage && (
+                      <ChangeImageProduct
+                        onClose={handleCloseChangeImage}
+                        index={selectedIndex}
+                        onLoadData={onLoadData}
+                        productId={initialValues.productId}
+                        open={openChangeImage}
+                      />
+                    )}
                     <Grid item xs={6} md={4} lg={3}>
                       <Card
                         style={{
@@ -468,7 +510,6 @@ const EditProductForm = ({ initialValues, onLoadData }) => {
                           imagePreview={imagePreview}
                           setImagePreview={setImagePreview}
                           onDropzoneClose={handleDropzoneClose}
-                          sx={{ padding: '50%' }}
                         />
                       </Card>
                     </Grid>

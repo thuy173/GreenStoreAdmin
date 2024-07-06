@@ -173,6 +173,7 @@ const ListProductView = () => {
   useEffect(() => {
     const update = localStorage.getItem('updateProduct') === 'true';
     const add = localStorage.getItem('addProduct') === 'true';
+    const change = localStorage.getItem('changeImageProduct') === 'true';
 
     if (update) {
       showAlert('success', 'Update product successfully!');
@@ -181,6 +182,10 @@ const ListProductView = () => {
     if (add) {
       showAlert('success', 'Add product successfully!');
       localStorage.removeItem('addProduct');
+    }
+    if (change) {
+      showAlert('success', 'Change images successfully!');
+      localStorage.removeItem('changeImageProduct');
     }
   }, []);
   return (
