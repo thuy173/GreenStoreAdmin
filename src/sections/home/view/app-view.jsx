@@ -20,7 +20,7 @@ export default function AppView() {
             title="Income"
             total={formatVND(1)}
             color="success"
-            icon={<img alt="icon" src="/assets/icons/glass/CardDashboard.svg" />}
+            icon={<img alt="icon" src="/assets/images/main/ic_income.svg" />}
           />
         </Grid>
 
@@ -29,16 +29,25 @@ export default function AppView() {
             title="Product"
             total={1}
             color="info"
-            icon={<img alt="icon" src="/assets/icons/glass/course.svg" />}
+            icon={<img alt="icon" src="/assets/images/main/ic_fruit.svg" />}
           />
         </Grid>
 
         <Grid xs={12} sm={6} md={4}>
           <CardDashboard
-            title="Income"
+            title="Customer"
             total={1}
             color="warning"
-            icon={<img alt="icon" src="/assets/icons/glass/student.svg" />}
+            icon={<img alt="icon" src="/assets/images/main/ic_customer.svg" />}
+          />
+        </Grid>
+
+        <Grid xs={12} sm={6} md={4}>
+          <CardDashboard
+            title="Customer"
+            total={1}
+            color="warning"
+            icon={<img alt="icon" src="/assets/images/main/ic_cart.svg" />}
           />
         </Grid>
       </Stack>
