@@ -35,7 +35,8 @@ const ListProductView = () => {
   const [selected, setSelected] = useState([]);
   const [orderBy, setOrderBy] = useState('name');
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [filterName, setFilterName] = useState('');
+  const [filterValue, setFilterValue] = useState('');
+  const filterFields = ['productName', 'unitOfMeasure'];
   const [productData, setProductData] = useState([]);
   const [alert, setAlert] = useState({ message: null, severity: 'success', isOpen: false });
 
@@ -86,11 +87,12 @@ const ListProductView = () => {
   const dataFiltered = applyFilter({
     inputData: productData,
     comparator: getComparator(order, orderBy),
-    filterName,
+    filterValue,
+    filterFields,
   });
 
-  const handleFilterByName = (event) => {
-    setFilterName(event.target.value);
+  const handleFilterChange = (event) => {
+    setFilterValue(event.target.value);
   };
 
   const notFound = !dataFiltered.length;
@@ -209,8 +211,8 @@ const ListProductView = () => {
       <Card sx={{ mt: 5 }}>
         <TableToolbarComponent
           numSelected={selected.length}
-          filterName={filterName}
-          onFilterName={handleFilterByName}
+          filterValue={filterValue}
+          onFilterChange={handleFilterChange}
         />
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
