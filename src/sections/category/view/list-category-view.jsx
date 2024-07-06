@@ -253,6 +253,7 @@ const ListCategoryView = () => {
                 onSelectAllClick={handleSelectAllClick}
                 headLabel={[
                   { id: 'categoryName', label: 'Category Name', align: 'center' },
+                  { id: 'description', label: 'Description', align: 'center' },
                   { id: '' },
                 ]}
               />
@@ -265,6 +266,7 @@ const ListCategoryView = () => {
                         key={item.categoryId}
                         categoryId={item.categoryId}
                         categoryName={item.categoryName}
+                        description={item.description}
                         selected={selected.indexOf(item.categoryId) !== -1}
                         handleClick={(event) => handleClick(event, item.categoryId)}
                         onDelete={handleDeleteRow}
@@ -339,12 +341,7 @@ const ListCategoryView = () => {
             <Button variant="contained" color="success" type="submit" onClick={handleAdd}>
               Add category
             </Button>
-            <Button
-              variant="outlined"
-              color="warning"
-              onClick={handleCloseAddModal}
-              sx={{ ml: 1 }}
-            >
+            <Button variant="outlined" color="warning" onClick={handleCloseAddModal} sx={{ ml: 1 }}>
               Close
             </Button>
           </Box>

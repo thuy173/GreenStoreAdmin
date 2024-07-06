@@ -18,11 +18,18 @@ import Iconify from '../../components/iconify';
 
 // ----------------------------------------------------------------------
 
-export default function ListCategoryRow({ categoryId, categoryName, selected, onDelete, onEdit }) {
+export default function ListCategoryRow({
+  categoryId,
+  categoryName,
+  description,
+  selected,
+  onDelete,
+  onEdit,
+}) {
   const [open, setOpen] = useState(null);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
-  const [editData, setEditData] = useState({ categoryName: '' });
+  const [editData, setEditData] = useState({ categoryName: '', description: '' });
 
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
@@ -52,6 +59,7 @@ export default function ListCategoryRow({ categoryId, categoryName, selected, on
   const handleOpenEditDialog = () => {
     setEditData({
       categoryName,
+      description,
     });
     setOpenEditDialog(true);
   };
@@ -82,6 +90,7 @@ export default function ListCategoryRow({ categoryId, categoryName, selected, on
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
         <TableCell align="center">{categoryId}</TableCell>
         <TableCell align="center">{categoryName}</TableCell>
+        <TableCell align="center">{description}</TableCell>
 
         <TableCell align="right">
           <IconButton onClick={handleOpenMenu}>
@@ -132,7 +141,7 @@ export default function ListCategoryRow({ categoryId, categoryName, selected, on
       <Dialog open={openEditDialog} onClose={handleCloseEditDialog} fullWidth maxWidth="md">
         <DialogTitle>Update category</DialogTitle>
         <DialogContent>
-          <Stack>
+          <Stack direction="column">
             <TextField
               id="outlined-basic"
               label="Category name"
@@ -142,13 +151,27 @@ export default function ListCategoryRow({ categoryId, categoryName, selected, on
               value={editData.categoryName ? editData.categoryName : ''}
               name="categoryName"
             />
+            <TextField
+              id="outlined-basic"
+              label="Description"
+              style={{ borderRadius: '2%', marginTop: '20px' }}
+              variant="outlined"
+              onChange={handleInputChange}
+              value={editData.description ? editData.description : ''}
+              name="description"
+            />
           </Stack>
 
           <Box display="flex" justifyContent="flex-end" sx={{ pt: 2 }}>
             <Button variant="contained" color="success" onClick={handleEdit}>
               Update
             </Button>
-            <Button variant="outlined" color="warning" onClick={handleCloseEditDialog} sx={{ ml: 1 }}>
+            <Button
+              variant="outlined"
+              color="warning"
+              onClick={handleCloseEditDialog}
+              sx={{ ml: 1 }}
+            >
               Close
             </Button>
           </Box>
@@ -161,6 +184,7 @@ export default function ListCategoryRow({ categoryId, categoryName, selected, on
 ListCategoryRow.propTypes = {
   categoryId: PropTypes.any,
   categoryName: PropTypes.any,
+  description: PropTypes.any,
   selected: PropTypes.any,
   onDelete: PropTypes.func,
   onEdit: PropTypes.func,
