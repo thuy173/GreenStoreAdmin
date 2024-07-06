@@ -117,6 +117,8 @@ const ListNutrientView = () => {
 
   const handleCloseAddModal = () => {
     setOpenAdd(false);
+    setNutrientName('');
+    setDescription('');
   };
 
   const fetchNutrientData = async () => {

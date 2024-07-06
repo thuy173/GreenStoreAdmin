@@ -117,6 +117,8 @@ const ListCategoryView = () => {
 
   const handleCloseAddModal = () => {
     setOpenAdd(false);
+    setCategoryName('');
+    setDescription('');
   };
 
   const fetchCategoryData = async () => {
