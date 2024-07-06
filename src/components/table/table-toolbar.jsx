@@ -11,7 +11,7 @@ import Iconify from '../iconify';
 
 // ----------------------------------------------------------------------
 
-export default function TableToolbarComponent({ numSelected, filterValue, onFilterChange  }) {
+export default function TableToolbarComponent({ numSelected, filterValue, onFilterChange }) {
   return (
     <Toolbar
       sx={{
@@ -32,8 +32,19 @@ export default function TableToolbarComponent({ numSelected, filterValue, onFilt
       ) : (
         <OutlinedInput
           value={filterValue}
-          onChange={onFilterChange }
-          placeholder="Nhập tên..."
+          onChange={onFilterChange}
+          placeholder="Search..."
+          sx={{
+            '& .MuiOutlinedInput-notchedOutline': {
+              borderColor: '#dadada',
+            },
+            '&:hover .MuiOutlinedInput-notchedOutline': {
+              borderColor: '#637381',
+            },
+            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+              borderColor: '#dadada',
+            },
+          }}
           startAdornment={
             <InputAdornment position="start">
               <Iconify
@@ -65,5 +76,5 @@ export default function TableToolbarComponent({ numSelected, filterValue, onFilt
 TableToolbarComponent.propTypes = {
   numSelected: PropTypes.number,
   filterValue: PropTypes.string,
-  onFilterChange : PropTypes.func,
+  onFilterChange: PropTypes.func,
 };
