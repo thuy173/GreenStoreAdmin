@@ -9,6 +9,7 @@ export const DashboardLayout = lazy(() => import('../layouts/dashboard'));
 export const ProductPage = lazy(() => import('../pages/ProductPage/main'));
 export const AddProductPage = lazy(() => import('../pages/ProductPage/add-product'));
 export const CategoryPage = lazy(() => import('../pages/CategoryPage/main'));
+export const NutrientPage = lazy(() => import('../pages/NutrientPage/main'));
 
 // ----------------------------------------------------------------------
 
@@ -27,6 +28,7 @@ export default function Router() {
         { path: 'product', element: <ProductPage /> },
         { path: 'product/addProduct', element: <AddProductPage /> },
         { path: 'category', element: <CategoryPage /> },
+        { path: 'nutrient', element: <NutrientPage /> },
       ],
     },
     {

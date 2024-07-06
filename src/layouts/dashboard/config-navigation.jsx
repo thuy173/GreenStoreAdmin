@@ -18,6 +18,11 @@ const navConfig = [
     icon: icon('ic_category'),
   },
   {
+    title: 'Nutrient',
+    path: '/nutrient',
+    icon: icon('ic_nutrient'),
+  },
+  {
     title: 'Product',
     path: '/product',
     icon: icon('ic_fruit'),

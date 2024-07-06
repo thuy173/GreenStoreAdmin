@@ -23,7 +23,7 @@ import {
 
 import { emptyRows, applyFilter, getComparator } from 'src/utils/tableUtils';
 
-import CategoryServices from 'src/services/CategoryServices';
+import NutrientServices from 'src/services/NutrientServices';
 
 import Link from 'src/components/link';
 import Iconify from 'src/components/iconify';
@@ -34,18 +34,18 @@ import CustomSnackbar from 'src/components/snackbar/snackbar';
 import TableEmptyRows from 'src/components/table/table-empty-rows';
 import TableToolbarComponent from 'src/components/table/table-toolbar';
 
-import ListCategoryRow from '../list-category-row';
+import ListNutrientRow from '../list-nutrient-row';
 
-const ListCategoryView = () => {
+const ListNutrientView = () => {
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
   const [orderBy, setOrderBy] = useState('name');
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [filterName, setFilterName] = useState('');
-  const [categoryData, setCategoryData] = useState([]);
+  const [nutrientData, setNutrientData] = useState([]);
   const [openAdd, setOpenAdd] = useState(false);
-  const [categoryName, setCategoryName] = useState('');
+  const [nutrientName, setNutrientName] = useState('');
   const [description, setDescription] = useState('');
   const [alert, setAlert] = useState({ message: null, severity: 'success', isOpen: false });
 
@@ -59,7 +59,7 @@ const ListCategoryView = () => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = categoryData.map((n) => n.categoryId);
+      const newSelected = nutrientData.map((n) => n.nutrientId);
       setSelected(newSelected);
       return;
     }
@@ -94,7 +94,7 @@ const ListCategoryView = () => {
   };
 
   const dataFiltered = applyFilter({
-    inputData: categoryData,
+    inputData: nutrientData,
     comparator: getComparator(order, orderBy),
     filterName,
   });
@@ -119,11 +119,11 @@ const ListCategoryView = () => {
     setOpenAdd(false);
   };
 
-  const fetchCategoryData = async () => {
+  const fetchNutrientData = async () => {
     try {
-      const response = await CategoryServices.getAll();
+      const response = await NutrientServices.getAll();
       if (response?.data && response?.status === 200) {
-        setCategoryData(response.data);
+        setNutrientData(response.data);
       } else {
         console.error(response ?? 'Unexpected response structure');
       }
@@ -134,10 +134,10 @@ const ListCategoryView = () => {
 
   const handleDeleteRow = async (id) => {
     try {
-      const response = await CategoryServices.deleteData(id);
+      const response = await NutrientServices.deleteData(id);
       if (response && response.status === 200) {
-        showAlert('success', 'Delete category successfully!');
-        fetchCategoryData();
+        showAlert('success', 'Delete nutrient successfully!');
+        fetchNutrientData();
       } else {
         setAlert({
           message: response?.response?.data?.message || 'An error occurred. Please check again!',
@@ -146,7 +146,7 @@ const ListCategoryView = () => {
         });
       }
     } catch (error) {
-      console.error('Failed to delete category:', error);
+      console.error('Failed to delete nutrient:', error);
       setAlert({
         message: error.message || 'An error occurred.',
         severity: 'error',
@@ -157,11 +157,11 @@ const ListCategoryView = () => {
 
   const handleEditRow = async (id, updatedData) => {
     try {
-      const response = await CategoryServices.editData(id, updatedData);
+      const response = await NutrientServices.editData(id, updatedData);
 
       if (response && response.status === 200) {
-        showAlert('success', 'Update category successfully!');
-        fetchCategoryData();
+        showAlert('success', 'Update nutrient successfully!');
+        fetchNutrientData();
       } else {
         setAlert({
           message: response?.response?.data?.message || 'An error occurred. Please check again!',
@@ -170,7 +170,7 @@ const ListCategoryView = () => {
         });
       }
     } catch (error) {
-      console.error('Failed to edit category:', error);
+      console.error('Failed to edit nutrient:', error);
       setAlert({
         message: error.message || 'An error occurred.',
         severity: 'error',
@@ -181,13 +181,13 @@ const ListCategoryView = () => {
 
   const handleAdd = async (e) => {
     e.preventDefault();
-    const credentials = { categoryName, description };
+    const credentials = { nutrientName, description };
     try {
-      const response = await CategoryServices.addData(credentials);
+      const response = await NutrientServices.addData(credentials);
       if (response.status === 200) {
         handleCloseAddModal();
-        showAlert('success', 'Add category successfully!');
-        fetchCategoryData();
+        showAlert('success', 'Add nutrient successfully!');
+        fetchNutrientData();
       } else {
         handleCloseAddModal();
         setAlert({
@@ -197,7 +197,7 @@ const ListCategoryView = () => {
         });
       }
     } catch (error) {
-      console.error('Failed to add category:', error);
+      console.error('Failed to add nutrient:', error);
       setAlert({
         message: error.message || 'An error occurred.',
         severity: 'error',
@@ -208,7 +208,7 @@ const ListCategoryView = () => {
   };
 
   useEffect(() => {
-    fetchCategoryData();
+    fetchNutrientData();
   }, []);
 
   return (
@@ -222,7 +222,7 @@ const ListCategoryView = () => {
             </Stack>
           </Link>
           <Typography variant="body1" color="text.primary">
-            Category
+            Nutrient
           </Typography>
         </Breadcrumbs>
         <Button
@@ -231,7 +231,7 @@ const ListCategoryView = () => {
           startIcon={<Iconify icon="eva:plus-fill" />}
           onClick={handleOpenAddModal}
         >
-          Add category
+          Add nutrient
         </Button>
       </Stack>
 
@@ -247,28 +247,28 @@ const ListCategoryView = () => {
               <TableHead
                 order={order}
                 orderBy={orderBy}
-                rowCount={categoryData.length}
+                rowCount={nutrientData.length}
                 numSelected={selected.length}
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
                 headLabel={[
-                  { id: 'categoryName', label: 'Category Name', align: 'center' },
+                  { id: 'nutrientName', label: 'Nutrient Name', align: 'center' },
                   { id: 'description', label: 'Description', align: 'center' },
                   { id: '' },
                 ]}
               />
-              {categoryData && categoryData.length > 0 ? (
+              {nutrientData && nutrientData.length > 0 ? (
                 <TableBody>
                   {dataFiltered
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((item) => (
-                      <ListCategoryRow
-                        key={item.categoryId}
-                        categoryId={item.categoryId}
-                        categoryName={item.categoryName}
+                      <ListNutrientRow
+                        key={item.nutrientId}
+                        nutrientId={item.nutrientId}
+                        nutrientName={item.nutrientName}
                         description={item.description}
-                        selected={selected.indexOf(item.categoryId) !== -1}
-                        handleClick={(event) => handleClick(event, item.categoryId)}
+                        selected={selected.indexOf(item.nutrientId) !== -1}
+                        handleClick={(event) => handleClick(event, item.nutrientId)}
                         onDelete={handleDeleteRow}
                         onEdit={(id, updatedData) => handleEditRow(id, updatedData)}
                       />
@@ -276,7 +276,7 @@ const ListCategoryView = () => {
 
                   <TableEmptyRows
                     height={77}
-                    emptyRows={emptyRows(page, rowsPerPage, categoryData.length)}
+                    emptyRows={emptyRows(page, rowsPerPage, nutrientData.length)}
                   />
 
                   {notFound && <TableNoData />}
@@ -297,7 +297,7 @@ const ListCategoryView = () => {
           <TablePagination
             page={page}
             component="div"
-            count={categoryData.length}
+            count={nutrientData.length}
             rowsPerPage={rowsPerPage}
             onPageChange={handleChangePage}
             rowsPerPageOptions={[5, 10, 25]}
@@ -314,16 +314,16 @@ const ListCategoryView = () => {
       />
 
       <Dialog open={openAdd} onClose={handleCloseAddModal} fullWidth maxWidth="md">
-        <DialogTitle>Add category new</DialogTitle>
+        <DialogTitle>Add Nutrient new</DialogTitle>
         <DialogContent>
           <TextField
             margin="dense"
             fullWidth
-            label="Category name"
+            label="Nutrient name"
             variant="outlined"
-            name="categoryName"
-            value={categoryName}
-            onChange={(e) => setCategoryName(e.target.value)}
+            name="nutrientName"
+            value={nutrientName}
+            onChange={(e) => setNutrientName(e.target.value)}
           />
           <TextField
             margin="dense"
@@ -339,7 +339,7 @@ const ListCategoryView = () => {
 
           <Box display="flex" justifyContent="flex-end" sx={{ mt: 2 }}>
             <Button variant="contained" color="success" type="submit" onClick={handleAdd}>
-              Add category
+              Add nutrient
             </Button>
             <Button variant="outlined" color="warning" onClick={handleCloseAddModal} sx={{ ml: 1 }}>
               Close
@@ -351,4 +351,4 @@ const ListCategoryView = () => {
   );
 };
 
-export default ListCategoryView;
+export default ListNutrientView;

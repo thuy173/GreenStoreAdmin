@@ -1,4 +1,4 @@
-import { getApi, putApi, postApi2, deleteApi } from './agent';
+import { getApi, putApi2, postApi2, deleteApi } from './agent';
 
 const CategoryServices = {
   getAll: async () => {
@@ -32,7 +32,7 @@ const CategoryServices = {
   },
   editData: async (id, payload) => {
     try {
-      const result = await putApi(`category/${id}`, payload);
+      const result = await putApi2(`category/${id}`, payload);
       return result;
     } catch (error) {
       console.log(error);
