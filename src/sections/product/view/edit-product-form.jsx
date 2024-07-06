@@ -7,11 +7,13 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Unstable_Grid2';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import {
+  Card,
   Stack,
   Button,
   Select,
   MenuItem,
   Checkbox,
+  Backdrop,
   TextField,
   Typography,
   InputLabel,
@@ -19,6 +21,7 @@ import {
   FormControl,
   Autocomplete,
   ListItemText,
+  CircularProgress,
 } from '@mui/material';
 
 import LoadingPage from 'src/pages/loading_page';
@@ -27,6 +30,7 @@ import CategoryServices from 'src/services/CategoryServices';
 import NutrientServices from 'src/services/NutrientServices';
 
 import Link from 'src/components/link';
+import DropZone from 'src/components/drop-zone';
 import CustomSnackbar from 'src/components/snackbar/snackbar';
 
 function formatTime(date) {
@@ -48,9 +52,10 @@ const MenuProps = {
   },
 };
 
-const EditProductForm = ({ initialValues }) => {
+const EditProductForm = ({ initialValues, onLoadData }) => {
   const navigate = useNavigate();
   const [alert, setAlert] = useState({ message: null, severity: 'success', isOpen: false });
+  const [loading, setLoading] = useState(false);
   const unitOfMeasureOptions = ['Kg', 'Bottle', 'Bag', 'Piece', 'Liter'];
   const [manufactureDate, setManufactureDate] = useState(initialValues.manufactureDate || '');
   const [expiryDate, setExpiryDate] = useState(initialValues.expiryDate || '');
@@ -58,6 +63,8 @@ const EditProductForm = ({ initialValues }) => {
   const [isInputBlurred, setIsInputBlurred] = useState(false);
   const [category, setCategory] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [imagePreview, setImagePreview] = useState(null);
+  const [, setImages] = useState(null);
   const [nutrient, setNutrient] = useState([]);
   const [selectNutrient, setSelectNutrient] = useState(
     initialValues.nutrients ? initialValues.nutrients.map((n) => n.nutrientId) : []
@@ -65,6 +72,14 @@ const EditProductForm = ({ initialValues }) => {
 
   const handleCloseAlert = () => {
     setAlert({ message: null, severity: 'success', isOpen: false });
+  };
+
+  const showAlert = (severity, message) => {
+    setAlert({ severity, message, isOpen: true });
+  };
+
+  const handleDropzoneClose = () => {
+    setImages(null);
   };
 
   const isEndTimeValid = () => {
@@ -171,6 +186,38 @@ const EditProductForm = ({ initialValues }) => {
     } finally {
       setSubmitting(false);
     }
+  };
+  const handleAddImage = async (image) => {
+    try {
+      setLoading(true);
+      const formData = new FormData();
+      formData.append('image ', image);
+      const response = await ProductServices.addImages(initialValues.productId, formData);
+      if (response.status === 200) {
+        showAlert('success', 'Add image successfully');
+        onLoadData();
+        setImagePreview(null);
+      } else {
+        setAlert({
+          message: response?.response?.data?.message || 'An error occurred. Please check again!',
+          severity: 'error',
+          isOpen: true,
+        });
+      }
+    } catch (error) {
+      setAlert({
+        message: error.message || 'An error occurred.',
+        severity: 'error',
+        isOpen: true,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDrop = (file) => {
+    setImages(file);
+    handleAddImage(file);
   };
 
   return (
@@ -376,6 +423,56 @@ const EditProductForm = ({ initialValues }) => {
                       </FormControl>
                     </Stack>
                   </Grid>
+                  <Grid item container spacing={2} px={2}>
+                    {initialValues.productImages.map((image) => (
+                      <Grid item xs={6} md={4} lg={3} key={image.productImageId}>
+                        <Card
+                          style={{
+                            width: '200px',
+                            height: '200px',
+                            margin: '10px',
+                            overflow: 'hidden',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            border: '1px solid #507c5c',
+                          }}
+                        >
+                          <img
+                            src={image.imageUrl}
+                            alt={initialValues.productName}
+                            style={{
+                              width: '100%',
+                              height: '100%',
+                              objectFit: 'fit',
+                            }}
+                          />
+                        </Card>
+                      </Grid>
+                    ))}
+                    <Grid item xs={6} md={4} lg={3}>
+                      <Card
+                        style={{
+                          width: '200px',
+                          height: '200px',
+                          margin: '10px',
+                          overflow: 'hidden',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          backgroundColor: '#f8f9fa',
+                        }}
+                      >
+                        <DropZone
+                          onDrop={handleDrop}
+                          imagePreview={imagePreview}
+                          setImagePreview={setImagePreview}
+                          onDropzoneClose={handleDropzoneClose}
+                          sx={{ padding: '50%' }}
+                        />
+                      </Card>
+                    </Grid>
+                  </Grid>
 
                   <Grid xs={6} md={8} px={3} pt={3}>
                     <Button
@@ -395,6 +492,9 @@ const EditProductForm = ({ initialValues }) => {
                   message={alert.message}
                   severity={alert.severity}
                 />
+                <Backdrop open={loading} style={{ color: '#fff', zIndex: 1400 }}>
+                  <CircularProgress color="inherit" />
+                </Backdrop>
               </Box>
             )}
           </form>
@@ -405,6 +505,7 @@ const EditProductForm = ({ initialValues }) => {
 };
 
 EditProductForm.propTypes = {
+  onLoadData: PropTypes.func,
   initialValues: PropTypes.shape({
     productId: PropTypes.any,
     productName: PropTypes.any,

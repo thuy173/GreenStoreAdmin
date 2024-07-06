@@ -30,6 +30,16 @@ const ProductServices = {
     }
     return null;
   },
+
+  addImages: async (id, payload) => {
+    try {
+      const result = await postApi2(`product/${id}/images`, payload);
+      return result;
+    } catch (error) {
+      console.log(error);
+    }
+    return null;
+  },
   editData: async (id, payload) => {
     try {
       const result = await putApi(`product/${id}`, payload);
