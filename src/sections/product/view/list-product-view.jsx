@@ -120,6 +120,29 @@ const ListProductView = () => {
     }
   };
 
+  const handleHideRow = async (id) => {
+    try {
+      const response = await ProductServices.hideData(id);
+      if (response && response.status === 200) {
+        showAlert('success', 'Delete product successfully!');
+        fetchProductData();
+      } else {
+        setAlert({
+          message: response?.response?.data?.message || 'An error occurred. Please check again!',
+          severity: 'error',
+          isOpen: true,
+        });
+      }
+    } catch (error) {
+      console.error('Failed to delete product:', error);
+      setAlert({
+        message: error.message || 'An error occurred.',
+        severity: 'error',
+        isOpen: true,
+      });
+    }
+  };
+
   useEffect(() => {
     fetchProductData();
   }, []);
@@ -202,6 +225,7 @@ const ListProductView = () => {
                         status={item.status}
                         selected={selected.indexOf(item.productId) !== -1}
                         handleClick={(event) => handleClick(event, item.productId)}
+                        onHide={handleHideRow}
                       />
                     ))}
 

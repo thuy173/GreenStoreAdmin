@@ -28,12 +28,12 @@ export default function ListProductRow({
   productImages,
   status,
   selected,
-  handleClick,
-  onDelete,
+  onHide,
 }) {
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(null);
+  const [openHideDialog, setOpenHideDialog] = useState(false);
 
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
@@ -43,22 +43,20 @@ export default function ListProductRow({
     setOpen(null);
   };
 
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-
-  const handleOpenDeleteDialog = () => {
-    setOpenDeleteDialog(true);
+  const handleOpenHideDialog = () => {
+    setOpenHideDialog(true);
   };
 
-  const handleCloseDeleteDialog = () => {
-    setOpenDeleteDialog(false);
+  const handleCloseHideDialog = () => {
+    setOpenHideDialog(false);
   };
 
-  const handleDelete = async () => {
+  const handleHide = async () => {
     try {
-      await onDelete(productId);
-      handleCloseDeleteDialog();
+      await onHide(productId);
+      handleCloseHideDialog();
     } catch (error) {
-      console.error('Failed to delete book:', error);
+      console.error('Failed to hide product:', error);
     }
   };
 
@@ -89,8 +87,11 @@ export default function ListProductRow({
         <TableCell align="center">1 {unitOfMeasure}</TableCell>
 
         <TableCell align="center">
-          <Label color={status === 1 ? 'success' : 'error'}>{status ? 'Active' : 'Inactive'}</Label>
+          <Label color={status === 1 ? 'success' : 'error'}>
+            {status === 1 ? 'Active' : 'Inactive'}
+          </Label>
         </TableCell>
+
         <TableCell align="right">
           <IconButton onClick={handleOpenMenu}>
             <Iconify icon="eva:more-vertical-fill" />
@@ -110,24 +111,29 @@ export default function ListProductRow({
           Edit
         </MenuItem>
 
-        <MenuItem onClick={handleOpenDeleteDialog} sx={{ color: 'error.main' }}>
-          <Iconify icon="eva:trash-2-outline" width={22} sx={{ mr: 2 }} />
-          Delete
+        <MenuItem onClick={handleOpenHideDialog} sx={{ color: 'error.main' }}>
+          <Iconify icon="bxs:hide" width={22} sx={{ mr: 2 }} />
+          Hidden
         </MenuItem>
       </Popover>
 
-      <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
-        <DialogTitle>Xóa sách</DialogTitle>
+      <Dialog open={openHideDialog} onClose={handleCloseHideDialog}>
+        <DialogTitle>Hide product</DialogTitle>
         <DialogContent>
           <Typography variant="body2" sx={{ mb: 2 }}>
-            Bạn có chắc chắn muốn xóa quyển sách này?
+            Are you sure you want to hide this product?
           </Typography>
           <Box display="flex" justifyContent="flex-end">
-            <Button variant="outlined" color="warning" onClick={handleCloseDeleteDialog}>
-              Đóng
+            <Button variant="contained" color="error" onClick={handleHide}>
+              Hide
             </Button>
-            <Button variant="contained" color="error" onClick={handleDelete} sx={{ ml: 1 }}>
-              Xóa sách
+            <Button
+              variant="outlined"
+              color="warning"
+              onClick={handleCloseHideDialog}
+              sx={{ ml: 1 }}
+            >
+              Close
             </Button>
           </Box>
         </DialogContent>
@@ -144,7 +150,6 @@ ListProductRow.propTypes = {
   unitOfMeasure: PropTypes.any,
   productImages: PropTypes.any,
   status: PropTypes.bool,
-  handleClick: PropTypes.func,
   selected: PropTypes.any,
-  onDelete: PropTypes.func,
+  onHide: PropTypes.func,
 };

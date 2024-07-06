@@ -3,7 +3,7 @@ import { getApi, putApi, postApi2, deleteApi } from './agent';
 const ProductServices = {
   getAll: async () => {
     try {
-      const result = await getApi(`product`, '');
+      const result = await getApi(`product/allStatus`, '');
       return result;
     } catch (error) {
       console.log(error);
@@ -40,9 +40,9 @@ const ProductServices = {
     return null;
   },
 
-  deleteData: async (id) => {
+  hideData: async (id) => {
     try {
-      const result = await deleteApi(`product/${id}`);
+      const result = await deleteApi(`product/soft/${id}`);
       return result;
     } catch (error) {
       console.log(error);
