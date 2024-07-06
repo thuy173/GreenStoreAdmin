@@ -5,6 +5,7 @@ import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
+import CloseIcon from '@mui/icons-material/Close';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
@@ -16,6 +17,7 @@ import {
   TableRow,
   TableCell,
   TextField,
+  IconButton,
   DialogTitle,
   DialogContent,
 } from '@mui/material';
@@ -317,6 +319,18 @@ const ListCategoryView = () => {
 
       <Dialog open={openAdd} onClose={handleCloseAddModal} fullWidth maxWidth="md">
         <DialogTitle>Add category new</DialogTitle>
+        <IconButton
+          aria-label="close"
+          onClick={handleCloseAddModal}
+          sx={{
+            position: 'absolute',
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
         <DialogContent>
           <TextField
             margin="dense"
@@ -340,11 +354,14 @@ const ListCategoryView = () => {
           />
 
           <Box display="flex" justifyContent="flex-end" sx={{ mt: 2 }}>
-            <Button variant="contained" color="success" type="submit" onClick={handleAdd}>
+            <Button
+              variant="contained"
+              color="success"
+              type="submit"
+              onClick={handleAdd}
+              sx={{ px: 10 }}
+            >
               Add category
-            </Button>
-            <Button variant="outlined" color="warning" onClick={handleCloseAddModal} sx={{ ml: 1 }}>
-              Close
             </Button>
           </Box>
         </DialogContent>

@@ -11,6 +11,7 @@ import MenuItem from '@mui/material/MenuItem';
 import TableCell from '@mui/material/TableCell';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 
@@ -131,21 +132,25 @@ export default function ListProductRow({
 
       <Dialog open={openHideDialog} onClose={handleCloseHideDialog}>
         <DialogTitle>Hide product</DialogTitle>
+        <IconButton
+          aria-label="close"
+          onClick={handleCloseHideDialog}
+          sx={{
+            position: 'absolute',
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
         <DialogContent>
           <Typography variant="body2" sx={{ mb: 2 }}>
             Are you sure you want to hide this product?
           </Typography>
           <Box display="flex" justifyContent="flex-end">
-            <Button variant="contained" color="error" onClick={handleHide}>
+            <Button variant="contained" color="error" onClick={handleHide} sx={{ px: 5, mt: 2 }}>
               Hide
-            </Button>
-            <Button
-              variant="outlined"
-              color="warning"
-              onClick={handleCloseHideDialog}
-              sx={{ ml: 1 }}
-            >
-              Close
             </Button>
           </Box>
         </DialogContent>

@@ -11,6 +11,7 @@ import TableCell from '@mui/material/TableCell';
 import { Stack, TextField } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 
@@ -107,8 +108,8 @@ export default function ListCategoryRow({
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <MenuItem onClick={handleOpenEditDialog}>
-          <Iconify icon="eva:edit-fill" width={22} sx={{ mr: 2 }} />
-          Edit
+          <Iconify icon="dashicons:update-alt" width={22} sx={{ mr: 2 }} />
+          Update
         </MenuItem>
 
         <MenuItem onClick={handleOpenDeleteDialog} sx={{ color: 'error.main' }}>
@@ -119,27 +120,43 @@ export default function ListCategoryRow({
 
       <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
         <DialogTitle>Delete Category</DialogTitle>
+        <IconButton
+          aria-label="close"
+          onClick={handleCloseDeleteDialog}
+          sx={{
+            position: 'absolute',
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
         <DialogContent>
           <Typography variant="body2" sx={{ mb: 2 }}>
             Are you sure you want to delete this category?
           </Typography>
           <Box display="flex" justifyContent="flex-end">
-            <Button variant="contained" color="error" onClick={handleDelete}>
+            <Button variant="contained" color="error" onClick={handleDelete} sx={{ px: 5, mt: 2 }}>
               Delete
-            </Button>
-            <Button
-              variant="outlined"
-              color="warning"
-              onClick={handleCloseDeleteDialog}
-              sx={{ ml: 1 }}
-            >
-              Close
             </Button>
           </Box>
         </DialogContent>
       </Dialog>
       <Dialog open={openEditDialog} onClose={handleCloseEditDialog} fullWidth maxWidth="md">
         <DialogTitle>Update category</DialogTitle>
+        <IconButton
+          aria-label="close"
+          onClick={handleCloseEditDialog}
+          sx={{
+            position: 'absolute',
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
         <DialogContent>
           <Stack direction="column">
             <TextField
@@ -163,16 +180,8 @@ export default function ListCategoryRow({
           </Stack>
 
           <Box display="flex" justifyContent="flex-end" sx={{ pt: 2 }}>
-            <Button variant="contained" color="success" onClick={handleEdit}>
+            <Button variant="contained" color="success" onClick={handleEdit} sx={{ px: 10 }}>
               Update
-            </Button>
-            <Button
-              variant="outlined"
-              color="warning"
-              onClick={handleCloseEditDialog}
-              sx={{ ml: 1 }}
-            >
-              Close
             </Button>
           </Box>
         </DialogContent>
