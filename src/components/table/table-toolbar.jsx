@@ -11,7 +11,7 @@ import Iconify from '../iconify';
 
 // ----------------------------------------------------------------------
 
-export default function TableToolbarComponent({ numSelected, filterName, onFilterName }) {
+export default function TableToolbarComponent({ numSelected, filterValue, onFilterChange  }) {
   return (
     <Toolbar
       sx={{
@@ -31,8 +31,8 @@ export default function TableToolbarComponent({ numSelected, filterName, onFilte
         </Typography>
       ) : (
         <OutlinedInput
-          value={filterName}
-          onChange={onFilterName}
+          value={filterValue}
+          onChange={onFilterChange }
           placeholder="Nhập tên..."
           startAdornment={
             <InputAdornment position="start">
@@ -64,6 +64,6 @@ export default function TableToolbarComponent({ numSelected, filterName, onFilte
 
 TableToolbarComponent.propTypes = {
   numSelected: PropTypes.number,
-  filterName: PropTypes.string,
-  onFilterName: PropTypes.func,
+  filterValue: PropTypes.string,
+  onFilterChange : PropTypes.func,
 };
