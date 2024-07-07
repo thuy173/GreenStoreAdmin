@@ -1,4 +1,4 @@
-import { Grid, Stack, Container, Typography } from '@mui/material';
+import { Grid, Stack, Container } from '@mui/material';
 
 import CardDashboard from '../list';
 
@@ -10,10 +10,6 @@ const formatVND = (amount) =>
 export default function AppView() {
   return (
     <Container maxWidth="xl">
-      <Typography variant="h4" sx={{ mb: 5 }}>
-        Hello👋
-      </Typography>
-
       <Stack direction="row" spacing={2}>
         <Grid xs={12} sm={6} md={4}>
           <CardDashboard
