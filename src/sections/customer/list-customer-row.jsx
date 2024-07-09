@@ -15,19 +15,17 @@ import CloseIcon from '@mui/icons-material/Close';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 
-import Label from '../../components/label';
 import Iconify from '../../components/iconify';
 
 // ----------------------------------------------------------------------
 
 export default function ListCustomerRow({
-  productId,
-  productName,
-  price,
-  description,
-  unitOfMeasure,
-  productImages,
-  status,
+  customerId,
+  fullName,
+  email,
+  phoneNumber,
+  address,
+  index,
   selected,
   onHide,
   onShow,
@@ -55,7 +53,7 @@ export default function ListCustomerRow({
 
   const handleHide = async () => {
     try {
-      await onHide(productId);
+      await onHide(customerId);
       handleCloseHideDialog();
     } catch (error) {
       console.error('Failed to hide product:', error);
@@ -63,16 +61,20 @@ export default function ListCustomerRow({
   };
   const handleShow = async () => {
     try {
-      await onShow(productId);
+      await onShow(customerId);
     } catch (error) {
       console.error('Failed to show product:', error);
     }
   };
 
   const handleEditProduct = () => {
-    navigate(`/product/edit/${productId}`);
+    navigate(`/product/edit/${customerId}`);
   };
 
+  const concatenatedAddresses = address
+    .map((addr) => `${addr.address}, ${addr.addressDetail}`)
+    .join(' | ');
+  
   return (
     <>
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
@@ -80,26 +82,22 @@ export default function ListCustomerRow({
           <Checkbox disableRipple checked={selected} onChange={handleClick} />
         </TableCell> */}
 
-        <TableCell align="center">{productId}</TableCell>
+        <TableCell align="center">{index}</TableCell>
 
-        <TableCell align="center">
+        {/* <TableCell align="center">
           <img
             src={productImages[0].imageUrl}
             alt={productName}
             style={{ width: '100px', objectFit: 'cover' }}
           />
-        </TableCell>
-        <TableCell align="center">{productName}</TableCell>
+        </TableCell> */}
+        <TableCell align="center">{fullName}</TableCell>
 
-        <TableCell align="center">{price}</TableCell>
+        <TableCell align="center">{email}</TableCell>
 
-        <TableCell align="center">1 {unitOfMeasure}</TableCell>
+        <TableCell align="center">{phoneNumber}</TableCell>
 
-        <TableCell align="center">
-          <Label color={status === 1 ? 'success' : 'error'}>
-            {status === 1 ? 'Active' : 'Inactive'}
-          </Label>
-        </TableCell>
+        <TableCell align="center">{concatenatedAddresses}</TableCell>
 
         <TableCell align="right">
           <IconButton onClick={handleOpenMenu}>
@@ -160,13 +158,19 @@ export default function ListCustomerRow({
 }
 
 ListCustomerRow.propTypes = {
-  productId: PropTypes.any,
-  productName: PropTypes.any,
-  description: PropTypes.any,
-  price: PropTypes.any,
-  unitOfMeasure: PropTypes.any,
-  productImages: PropTypes.any,
-  status: PropTypes.bool,
+  customerId: PropTypes.number,
+  fullName: PropTypes.string,
+  email: PropTypes.string,
+  phoneNumber: PropTypes.string,
+  address: PropTypes.arrayOf(
+    PropTypes.shape({
+      addressId: PropTypes.number,
+      address: PropTypes.string,
+      addressDetail: PropTypes.string,
+      isActive: PropTypes.bool,
+    })
+  ),
+  index: PropTypes.number,
   selected: PropTypes.any,
   onHide: PropTypes.func,
   onShow: PropTypes.func,

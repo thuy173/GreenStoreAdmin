@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -7,17 +6,17 @@ import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
+import { TableRow, TableCell } from '@mui/material';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
-import { Button, TableRow, TableCell } from '@mui/material';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
 import { emptyRows, applyFilter, getComparator } from 'src/utils/tableUtils';
 
 import ProductServices from 'src/services/ProductServices';
+import CustomerServices from 'src/services/CustomerServices';
 
 import Link from 'src/components/link';
-import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 import TableHead from 'src/components/table/table-head';
 import TableNoData from 'src/components/table/table-no-data';
@@ -28,15 +27,14 @@ import TableToolbarComponent from 'src/components/table/table-toolbar';
 import ListCustomerRow from '../list-customer-row';
 
 const ListCustomerView = () => {
-  const navigate = useNavigate();
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
   const [orderBy, setOrderBy] = useState('name');
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [filterValue, setFilterValue] = useState('');
-  const filterFields = ['productName', 'unitOfMeasure'];
-  const [productData, setProductData] = useState([]);
+  const filterFields = ['fullName', 'email', 'phoneNumber'];
+  const [customerData, setCustomerData] = useState([]);
   const [alert, setAlert] = useState({ message: null, severity: 'success', isOpen: false });
 
   const handleSort = (event, id) => {
@@ -49,7 +47,7 @@ const ListCustomerView = () => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = productData.map((n) => n.productId);
+      const newSelected = customerData.map((n) => n.customerId);
       setSelected(newSelected);
       return;
     }
@@ -84,7 +82,7 @@ const ListCustomerView = () => {
   };
 
   const dataFiltered = applyFilter({
-    inputData: productData,
+    inputData: customerData,
     comparator: getComparator(order, orderBy),
     filterValue,
     filterFields,
@@ -104,15 +102,11 @@ const ListCustomerView = () => {
     setAlert({ message: null, severity: 'success', isOpen: false });
   };
 
-  const handleAddProduct = () => {
-    navigate('/product/add');
-  };
-
-  const fetchProductData = async () => {
+  const fetchCustomerData = async () => {
     try {
-      const response = await ProductServices.getAll();
+      const response = await CustomerServices.getAll();
       if (response?.data && response?.status === 200) {
-        setProductData(response.data);
+        setCustomerData(response.data);
       } else {
         console.error(response ?? 'Unexpected response structure');
       }
@@ -126,7 +120,7 @@ const ListCustomerView = () => {
       const response = await ProductServices.hideData(id);
       if (response && response.status === 204) {
         showAlert('success', 'Hidden product successfully!');
-        fetchProductData();
+        fetchCustomerData();
       } else {
         setAlert({
           message: response?.response?.data?.message || 'An error occurred. Please check again!',
@@ -148,7 +142,7 @@ const ListCustomerView = () => {
       const response = await ProductServices.showData(id);
       if (response && response.status === 204) {
         showAlert('success', 'Show product successfully!');
-        fetchProductData();
+        fetchCustomerData();
       } else {
         setAlert({
           message: response?.response?.data?.message || 'An error occurred. Please check again!',
@@ -167,7 +161,7 @@ const ListCustomerView = () => {
   };
 
   useEffect(() => {
-    fetchProductData();
+    fetchCustomerData();
   }, []);
 
   useEffect(() => {
@@ -198,17 +192,9 @@ const ListCustomerView = () => {
             </Stack>
           </Link>
           <Typography variant="body1" color="text.primary">
-            Product
+            Customer
           </Typography>
         </Breadcrumbs>
-        <Button
-          variant="contained"
-          color="inherit"
-          startIcon={<Iconify icon="eva:plus-fill" />}
-          onClick={handleAddProduct}
-        >
-          Add product
-        </Button>
       </Stack>
 
       <Card sx={{ mt: 5 }}>
@@ -223,35 +209,34 @@ const ListCustomerView = () => {
               <TableHead
                 order={order}
                 orderBy={orderBy}
-                rowCount={productData.length}
+                rowCount={customerData.length}
                 numSelected={selected.length}
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
                 headLabel={[
-                  { id: 'productImages', label: '', align: 'center' },
-                  { id: 'productName', label: 'Product Name', align: 'center' },
-                  { id: 'price', label: 'Price', align: 'center' },
-                  { id: 'unitOfMeasure', label: 'Measure', align: 'center' },
-                  { id: 'status', label: 'Status', align: 'center' },
+                  // { id: 'productImages', label: '', align: 'center' },
+                  { id: 'fullName', label: 'Full Name', align: 'center' },
+                  { id: 'email', label: 'Email', align: 'center' },
+                  { id: 'phoneNumber', label: 'Phone number', align: 'center' },
+                  { id: 'address', label: 'Address', align: 'center' },
                   { id: '' },
                 ]}
               />
-              {productData && productData.length > 0 ? (
+              {customerData && customerData.length > 0 ? (
                 <TableBody>
                   {dataFiltered
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((item) => (
+                    .map((item, index) => (
                       <ListCustomerRow
-                        key={item.productId}
-                        productId={item.productId}
-                        productName={item.productName}
-                        price={item.price}
-                        description={item.description}
-                        unitOfMeasure={item.unitOfMeasure}
-                        productImages={item.productImages}
-                        status={item.status}
-                        selected={selected.indexOf(item.productId) !== -1}
-                        handleClick={(event) => handleClick(event, item.productId)}
+                        key={item.customerId}
+                        index={index + 1}
+                        customerId={item.customerId}
+                        fullName={item.fullName}
+                        email={item.email}
+                        phoneNumber={item.phoneNumber}
+                        address={item.address}
+                        selected={selected.indexOf(item.customerId) !== -1}
+                        handleClick={(event) => handleClick(event, item.customerId)}
                         onHide={handleHideRow}
                         onShow={handleShow}
                       />
@@ -259,7 +244,7 @@ const ListCustomerView = () => {
 
                   <TableEmptyRows
                     height={77}
-                    emptyRows={emptyRows(page, rowsPerPage, productData.length)}
+                    emptyRows={emptyRows(page, rowsPerPage, customerData.length)}
                   />
 
                   {notFound && <TableNoData />}
@@ -280,7 +265,7 @@ const ListCustomerView = () => {
           <TablePagination
             page={page}
             component="div"
-            count={productData.length}
+            count={customerData.length}
             rowsPerPage={rowsPerPage}
             onPageChange={handleChangePage}
             rowsPerPageOptions={[5, 10, 25]}

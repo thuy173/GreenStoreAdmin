@@ -3,7 +3,7 @@ import { getApi, putApi2, postApi2, deleteApi } from './agent';
 const CustomerServices = {
   getAll: async () => {
     try {
-      const result = await getApi(`category`, '');
+      const result = await getApi(`customer`, '');
       return result;
     } catch (error) {
       console.log(error);
@@ -13,7 +13,7 @@ const CustomerServices = {
 
   getById: async (id) => {
     try {
-      const result = await getApi(`category/${id}`, '');
+      const result = await getApi(`customer/${id}`, '');
       return result;
     } catch (error) {
       console.log(error);
@@ -23,7 +23,7 @@ const CustomerServices = {
 
   addData: async (payload) => {
     try {
-      const result = await postApi2('category', payload);
+      const result = await postApi2('customer', payload);
       return result;
     } catch (error) {
       console.log(error);
@@ -32,7 +32,7 @@ const CustomerServices = {
   },
   editData: async (id, payload) => {
     try {
-      const result = await putApi2(`category/${id}`, payload);
+      const result = await putApi2(`customer/${id}`, payload);
       return result;
     } catch (error) {
       console.log(error);
@@ -42,7 +42,7 @@ const CustomerServices = {
 
   deleteData: async (id) => {
     try {
-      const result = await deleteApi(`category/${id}`);
+      const result = await deleteApi(`customer/${id}`);
       return result;
     } catch (error) {
       console.log(error);
