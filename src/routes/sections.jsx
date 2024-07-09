@@ -11,6 +11,7 @@ export const AddProductPage = lazy(() => import('../pages/ProductPage/add-produc
 export const EditProductPage = lazy(() => import('../pages/ProductPage/edit-product'));
 export const CategoryPage = lazy(() => import('../pages/CategoryPage/main'));
 export const NutrientPage = lazy(() => import('../pages/NutrientPage/main'));
+export const CustomerPage = lazy(() => import('../pages/CustomerPage/main'));
 
 // ----------------------------------------------------------------------
 
@@ -31,6 +32,7 @@ export default function Router() {
         { path: 'product/edit/:id', element: <EditProductPage /> },
         { path: 'category', element: <CategoryPage /> },
         { path: 'nutrient', element: <NutrientPage /> },
+        { path: 'customer', element: <CustomerPage /> },
       ],
     },
     {
