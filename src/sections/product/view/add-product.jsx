@@ -68,7 +68,7 @@ const AddProductView = () => {
   const [nutrient, setNutrient] = useState([]);
   const [selectNutrient, setSelectNutrient] = useState([]);
   const [numImage, setNumImage] = useState(1);
-  const [imageData, setImageData] = useState({ answers: [], answerFiles: [] });
+  const [imageData, setImageData] = useState({ imageFiles: [] });
   const [imagePreviewProduct, setImagePreviewProduct] = useState(Array(numImage).fill(null));
 
   const [alert, setAlert] = useState({ message: null, severity: 'success', isOpen: false });
@@ -155,15 +155,12 @@ const AddProductView = () => {
     if (numImage > 1) {
       setNumImage((prevNum) => prevNum - 1);
 
-      const newAnswers = [...imageData.answers];
-      const newAnswerFiles = [...imageData.answerFiles];
-      newAnswers.splice(index, 1);
+      const newAnswerFiles = [...imageData.imageFiles];
       newAnswerFiles.splice(index, 1);
 
       setImageData((prevData) => ({
         ...prevData,
-        answers: newAnswers,
-        answerFiles: newAnswerFiles,
+        imageFiles: newAnswerFiles,
       }));
 
       setImagePreviewProduct((prevPreviews) => {
@@ -175,19 +172,15 @@ const AddProductView = () => {
   };
 
   const handleImageUpload = (files, index) => {
-    const newAnswers = [...imageData.answers];
-    const newAnswerFiles = [...imageData.answerFiles];
+    const newAnswerFiles = [...imageData.imageFiles];
 
-    // Ensure files is an array
     const filesArray = Array.isArray(files) ? files : [files];
 
-    newAnswers[index] = filesArray.map((file) => URL.createObjectURL(file));
     newAnswerFiles[index] = filesArray;
 
     setImageData((prevData) => ({
       ...prevData,
-      answers: newAnswers,
-      answerFiles: newAnswerFiles,
+      imageFiles: newAnswerFiles,
     }));
 
     setImagePreviewProduct((prevPreviews) => {
@@ -222,7 +215,7 @@ const AddProductView = () => {
         formData.append('expiryDate', formatTime(formattedExpiryDate));
       }
 
-      imageData.answerFiles.forEach((fileArray) => {
+      imageData.imageFiles.forEach((fileArray) => {
         fileArray.forEach((file) => {
           formData.append(`productImages`, file);
         });
