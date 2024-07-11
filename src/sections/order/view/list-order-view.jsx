@@ -33,7 +33,7 @@ const ListOrderView = () => {
   const [orderBy, setOrderBy] = useState('name');
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [filterValue, setFilterValue] = useState('');
-  const filterFields = ['guestName', 'customerId'];
+  const filterFields = ['guestName', 'shippingAddress'];
   const [orderData, setOrderData] = useState([]);
   const [alert, setAlert] = useState({ message: null, severity: 'success', isOpen: false });
 
@@ -183,7 +183,7 @@ const ListOrderView = () => {
     }
   }, []);
   return (
-    <Stack p={5}>
+    <Stack px={3}>
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Breadcrumbs separator={<NavigateNextIcon fontSize="large" />} aria-label="breadcrumb">
           <Link href="/">
@@ -197,7 +197,7 @@ const ListOrderView = () => {
         </Breadcrumbs>
       </Stack>
 
-      <Card sx={{ mt: 5 }}>
+      <Card sx={{ mt: 1.5 }}>
         <TableToolbarComponent
           numSelected={selected.length}
           filterValue={filterValue}

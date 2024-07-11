@@ -189,7 +189,7 @@ const ListProductView = () => {
     }
   }, []);
   return (
-    <Stack p={5}>
+    <Stack px={3}>
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Breadcrumbs separator={<NavigateNextIcon fontSize="large" />} aria-label="breadcrumb">
           <Link href="/">
@@ -211,7 +211,7 @@ const ListProductView = () => {
         </Button>
       </Stack>
 
-      <Card sx={{ mt: 5 }}>
+      <Card sx={{ mt: 1.5 }}>
         <TableToolbarComponent
           numSelected={selected.length}
           filterValue={filterValue}

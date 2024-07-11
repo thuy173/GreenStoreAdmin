@@ -183,7 +183,7 @@ const ListCustomerView = () => {
     }
   }, []);
   return (
-    <Stack p={5}>
+    <Stack px={3}>
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Breadcrumbs separator={<NavigateNextIcon fontSize="large" />} aria-label="breadcrumb">
           <Link href="/">
@@ -197,7 +197,7 @@ const ListCustomerView = () => {
         </Breadcrumbs>
       </Stack>
 
-      <Card sx={{ mt: 5 }}>
+      <Card sx={{ mt: 1.5 }}>
         <TableToolbarComponent
           numSelected={selected.length}
           filterValue={filterValue}
@@ -214,7 +214,7 @@ const ListCustomerView = () => {
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
                 headLabel={[
-                  // { id: 'productImages', label: '', align: 'center' },
+                  { id: 'avatar', label: '', align: 'center' },
                   { id: 'fullName', label: 'Full Name', align: 'center' },
                   { id: 'email', label: 'Email', align: 'center' },
                   { id: 'phoneNumber', label: 'Phone number', align: 'center' },
@@ -231,6 +231,7 @@ const ListCustomerView = () => {
                         key={item.customerId}
                         index={index + 1}
                         customerId={item.customerId}
+                        avatar={item.avatar}
                         fullName={item.fullName}
                         email={item.email}
                         phoneNumber={item.phoneNumber}

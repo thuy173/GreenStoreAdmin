@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
+import { Avatar } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import Popover from '@mui/material/Popover';
@@ -21,6 +22,7 @@ import Iconify from '../../components/iconify';
 
 export default function ListCustomerRow({
   customerId,
+  avatar,
   fullName,
   email,
   phoneNumber,
@@ -74,7 +76,7 @@ export default function ListCustomerRow({
   const concatenatedAddresses = address
     .map((addr) => `${addr.address}, ${addr.addressDetail}`)
     .join(' | ');
-  
+
   return (
     <>
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
@@ -84,13 +86,9 @@ export default function ListCustomerRow({
 
         <TableCell align="center">{index}</TableCell>
 
-        {/* <TableCell align="center">
-          <img
-            src={productImages[0].imageUrl}
-            alt={productName}
-            style={{ width: '100px', objectFit: 'cover' }}
-          />
-        </TableCell> */}
+        <TableCell align="center">
+          <Avatar src={avatar} alt={fullName} style={{ objectFit: 'cover' }} />
+        </TableCell>
         <TableCell align="center">{fullName}</TableCell>
 
         <TableCell align="center">{email}</TableCell>
@@ -159,6 +157,7 @@ export default function ListCustomerRow({
 
 ListCustomerRow.propTypes = {
   customerId: PropTypes.number,
+  avatar: PropTypes.any,
   fullName: PropTypes.string,
   email: PropTypes.string,
   phoneNumber: PropTypes.string,

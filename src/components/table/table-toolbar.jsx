@@ -15,7 +15,7 @@ export default function TableToolbarComponent({ numSelected, filterValue, onFilt
   return (
     <Toolbar
       sx={{
-        height: 96,
+        height: 68,
         display: 'flex',
         justifyContent: 'space-between',
         p: (theme) => theme.spacing(0, 1, 0, 3),
@@ -35,6 +35,8 @@ export default function TableToolbarComponent({ numSelected, filterValue, onFilt
           onChange={onFilterChange}
           placeholder="Search..."
           sx={{
+            height: '58%',
+            width: '42%',
             '& .MuiOutlinedInput-notchedOutline': {
               borderColor: '#dadada',
             },
