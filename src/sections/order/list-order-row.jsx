@@ -27,8 +27,11 @@ import Iconify from '../../components/iconify';
 export default function ListOrderRow({
   orderId,
   customerId,
+  fullName,
+  email,
+  phoneNumber,
+  orderDate,
   totalAmount,
-  guestName,
   shippingAddress,
   status,
   onLoad,
@@ -109,13 +112,15 @@ export default function ListOrderRow({
       <TableRow hover tabIndex={-1}>
         <TableCell align="center">{orderId}</TableCell>
 
-        <TableCell align="center">{customerId}</TableCell>
+        <TableCell align="center">{fullName}</TableCell>
 
-        <TableCell align="center">{guestName}</TableCell>
+        <TableCell align="center">{phoneNumber}</TableCell>
+
+        <TableCell align="center">{shippingAddress}</TableCell>
 
         <TableCell align="center">{totalAmount}</TableCell>
 
-        <TableCell align="center">{shippingAddress}</TableCell>
+        <TableCell align="center">{orderDate}</TableCell>
 
         <TableCell align="center">
           <Select
@@ -196,8 +201,11 @@ export default function ListOrderRow({
 ListOrderRow.propTypes = {
   orderId: PropTypes.any,
   customerId: PropTypes.any,
+  fullName: PropTypes.any,
+  email: PropTypes.any,
+  phoneNumber: PropTypes.any,
+  orderDate: PropTypes.any,
   totalAmount: PropTypes.any,
-  guestName: PropTypes.any,
   shippingAddress: PropTypes.any,
   status: PropTypes.any,
   onLoad: PropTypes.any,

@@ -196,10 +196,11 @@ const ListOrderView = () => {
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
                 headLabel={[
-                  { id: 'customerId', label: 'CustomerId', align: 'center' },
-                  { id: 'guestName', label: 'Name', align: 'center' },
-                  { id: 'totalAmount', label: 'Amount', align: 'center' },
+                  { id: 'fullName', label: 'Name', align: 'center' },
+                  { id: 'phoneNumber', label: 'Phone number', align: 'center' },
                   { id: 'shippingAddress', label: 'Shipping Address', align: 'center' },
+                  { id: 'totalAmount', label: 'Amount', align: 'center' },
+                  { id: 'orderDate', label: 'Date', align: 'center' },
                   { id: 'status', label: 'Status', align: 'center' },
                   { id: '' },
                 ]}
@@ -213,8 +214,11 @@ const ListOrderView = () => {
                         key={item.orderId}
                         orderId={item.orderId}
                         customerId={item.customerId}
+                        fullName={item.fullName}
+                        email={item.email}
+                        phoneNumber={item.phoneNumber}
+                        orderDate={item.orderDate}
                         totalAmount={item.totalAmount}
-                        guestName={item.guestName}
                         shippingAddress={item.shippingAddress}
                         status={item.status}
                         onLoad={fetchOrderData}
