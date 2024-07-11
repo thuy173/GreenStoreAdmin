@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 import ListItemButton from '@mui/material/ListItemButton';
 
 import { NAV } from './config-layout';
-import Logo from '../../components/logo';
+// import Logo from '../../components/logo';
 import navConfig from './config-navigation';
 import { usePathname } from '../../routes/hooks';
 import Scrollbar from '../../components/scrollbar';
@@ -34,9 +34,9 @@ export default function Nav({ openNav, onCloseNav }) {
   const renderAccount = (
     <Box
       sx={{
-        my: 3,
+        my: 2,
         mx: 2.5,
-        py: 2,
+        py: 1.3,
         px: 2.5,
         display: 'flex',
         borderRadius: 1.5,
@@ -54,14 +54,14 @@ export default function Nav({ openNav, onCloseNav }) {
         }}
       />
 
-      <Typography variant="subtitle2" sx={{ my: 1.5, px: 2 }}>
+      <Typography variant="subtitle2" sx={{ my: 1.5, px: 1.5 }}>
         Admin
       </Typography>
     </Box>
   );
 
   const renderMenu = (
-    <Stack component="nav" spacing={0.5} sx={{ px: 2 }}>
+    <Stack component="nav" spacing={0.5} sx={{ px: 3.8 }}>
       {navConfig.map((item) => (
         <NavItem key={item.title} item={item} />
       ))}
@@ -79,7 +79,12 @@ export default function Nav({ openNav, onCloseNav }) {
         },
       }}
     >
-      <Logo sx={{ mt: 3, ml: 4 }} />
+      {/* <Logo sx={{ mt: 3, ml: 4 }} /> */}
+      <Stack justifyContent="center" alignItems="center">
+        <Typography sx={{ mt: 3, color: '#507c5c' }} variant="h4">
+          Green Store
+        </Typography>
+      </Stack>
 
       {renderAccount}
 

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
+import { Select } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import Popover from '@mui/material/Popover';
@@ -15,7 +16,10 @@ import CloseIcon from '@mui/icons-material/Close';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 
-import Label from '../../components/label';
+import OrderServices from 'src/services/OrderServices';
+
+import CustomSnackbar from 'src/components/snackbar/snackbar';
+
 import Iconify from '../../components/iconify';
 
 // ----------------------------------------------------------------------
@@ -27,14 +31,16 @@ export default function ListOrderRow({
   guestName,
   shippingAddress,
   status,
-  selected,
+  onLoad,
   onHide,
-  onShow,
 }) {
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(null);
   const [openHideDialog, setOpenHideDialog] = useState(false);
+  const [alert, setAlert] = useState({ message: null, severity: 'success', isOpen: false });
+
+  const statuses = ['PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELED', 'RETURNED'];
 
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
@@ -60,25 +66,47 @@ export default function ListOrderRow({
       console.error('Failed to hide product:', error);
     }
   };
-  const handleShow = async () => {
-    try {
-      await onShow(orderId);
-    } catch (error) {
-      console.error('Failed to show product:', error);
-    }
+
+  const handleDetailOrder = () => {
+    navigate(`/order/detail/${orderId}`);
   };
 
-  const handleEditProduct = () => {
-    navigate(`/product/edit/${orderId}`);
+  const showAlert = (severity, message) => {
+    setAlert({ severity, message, isOpen: true });
+  };
+
+  const handleCloseAlert = () => {
+    setAlert({ message: null, severity: 'success', isOpen: false });
+  };
+
+  const handleChangeStatus = async (event) => {
+    const newStatus = event.target.value;
+    try {
+      const response = await OrderServices.changeStatus(orderId, newStatus);
+
+      if (response && response.status === 200) {
+        showAlert('success', 'Update status order successfully!');
+        onLoad();
+      } else {
+        setAlert({
+          message: response?.response?.data?.message || 'An error occurred. Please check again!',
+          severity: 'error',
+          isOpen: true,
+        });
+      }
+    } catch (error) {
+      console.error('Failed to update status:', error);
+      setAlert({
+        message: error.message || 'An error occurred.',
+        severity: 'error',
+        isOpen: true,
+      });
+    }
   };
 
   return (
     <>
-      <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
-        {/* <TableCell padding="checkbox">
-          <Checkbox disableRipple checked={selected} onChange={handleClick} />
-        </TableCell> */}
-
+      <TableRow hover tabIndex={-1}>
         <TableCell align="center">{orderId}</TableCell>
 
         <TableCell align="center">{customerId}</TableCell>
@@ -90,9 +118,19 @@ export default function ListOrderRow({
         <TableCell align="center">{shippingAddress}</TableCell>
 
         <TableCell align="center">
-          <Label color={status === 1 ? 'success' : 'error'}>
-            {status === 1 ? 'Active' : 'Inactive'}
-          </Label>
+          <Select
+            value={status}
+            onChange={handleChangeStatus}
+            displayEmpty
+            inputProps={{ 'aria-label': 'Without label' }}
+            sx={{ height: 30 }}
+          >
+            {statuses.map((items) => (
+              <MenuItem key={items} value={items}>
+                {items}
+              </MenuItem>
+            ))}
+          </Select>
         </TableCell>
 
         <TableCell align="right">
@@ -109,15 +147,11 @@ export default function ListOrderRow({
         anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <MenuItem onClick={handleEditProduct}>
+        <MenuItem onClick={handleDetailOrder}>
           <Iconify icon="dashicons:update-alt" width={22} sx={{ mr: 2 }} />
-          Update
+          Detail
         </MenuItem>
 
-        <MenuItem onClick={handleShow}>
-          <Iconify icon="bxs:show" width={22} sx={{ mr: 2 }} />
-          Show
-        </MenuItem>
         <MenuItem onClick={handleOpenHideDialog} sx={{ color: 'error.main' }}>
           <Iconify icon="bxs:hide" width={22} sx={{ mr: 2 }} />
           Hidden
@@ -149,6 +183,12 @@ export default function ListOrderRow({
           </Box>
         </DialogContent>
       </Dialog>
+      <CustomSnackbar
+        open={alert.isOpen}
+        onClose={handleCloseAlert}
+        message={alert.message}
+        severity={alert.severity}
+      />
     </>
   );
 }
@@ -160,7 +200,6 @@ ListOrderRow.propTypes = {
   guestName: PropTypes.any,
   shippingAddress: PropTypes.any,
   status: PropTypes.any,
-  selected: PropTypes.any,
+  onLoad: PropTypes.any,
   onHide: PropTypes.func,
-  onShow: PropTypes.func,
 };

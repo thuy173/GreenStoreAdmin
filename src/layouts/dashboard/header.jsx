@@ -8,7 +8,6 @@ import { useTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 
 import { bgBlur } from '../../theme/css';
-// import Searchbar from './common/searchbar';
 import { NAV, HEADER } from './config-layout';
 import Iconify from '../../components/iconify';
 import AccountPopover from './common/account-popover';
@@ -30,8 +29,6 @@ export default function Header({ onOpenNav }) {
           <Iconify icon="eva:menu-2-fill" />
         </IconButton>
       )}
-
-      {/* <Searchbar /> */}
 
       <Box sx={{ flexGrow: 1 }} />
 
