@@ -11,8 +11,7 @@ import { bgBlur } from '../../theme/css';
 import { NAV, HEADER } from './config-layout';
 import Iconify from '../../components/iconify';
 import AccountPopover from './common/account-popover';
-import LanguagePopover from './common/language-popover';
-// import NotificationsPopover from './common/notifications-popover';
+import NotificationsPopover from './common/notifications-popover';
 import { useResponsive } from '../../components/hooks/use-responsive';
 
 // ----------------------------------------------------------------------
@@ -33,8 +32,7 @@ export default function Header({ onOpenNav }) {
       <Box sx={{ flexGrow: 1 }} />
 
       <Stack direction="row" alignItems="center" spacing={1}>
-        <LanguagePopover />
-        {/* <NotificationsPopover /> */}
+        <NotificationsPopover />
         <AccountPopover />
       </Stack>
     </>
