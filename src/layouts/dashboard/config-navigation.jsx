@@ -37,6 +37,11 @@ const navConfig = [
     path: '/customer',
     icon: icon('ic_user'),
   },
+  {
+    title: 'Blog',
+    path: '/blog',
+    icon: icon('ic_user'),
+  },
 ];
 
 export default navConfig;
