@@ -1,26 +1,16 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
-import CloseIcon from '@mui/icons-material/Close';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
+import { Button, TableRow, TableCell } from '@mui/material';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import {
-  Box,
-  Button,
-  Dialog,
-  TableRow,
-  TableCell,
-  TextField,
-  IconButton,
-  DialogTitle,
-  DialogContent,
-} from '@mui/material';
 
 import { emptyRows, applyFilter, getComparator } from 'src/utils/tableUtils';
 
@@ -38,6 +28,7 @@ import TableToolbarComponent from 'src/components/table/table-toolbar';
 import ListBlogRow from '../list-blog-row';
 
 const ListBlogView = () => {
+  const navigate = useNavigate();
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('name');
@@ -45,9 +36,6 @@ const ListBlogView = () => {
   const [filterValue, setFilterValue] = useState('');
   const filterFields = ['title', 'description'];
   const [blogData, setBlogData] = useState([]);
-  const [openAdd, setOpenAdd] = useState(false);
-  const [categoryName, setCategoryName] = useState('');
-  const [description, setDescription] = useState('');
   const [alert, setAlert] = useState({ message: null, severity: 'success', isOpen: false });
 
   const handleSort = (event, id) => {
@@ -88,12 +76,8 @@ const ListBlogView = () => {
     setAlert({ message: null, severity: 'success', isOpen: false });
   };
 
-  const handleOpenAddModal = () => setOpenAdd(true);
-
-  const handleCloseAddModal = () => {
-    setOpenAdd(false);
-    setCategoryName('');
-    setDescription('');
+  const handleOpenAddModal = () => {
+    navigate('/blog/add');
   };
 
   const fetchBlogData = async () => {
@@ -132,18 +116,14 @@ const ListBlogView = () => {
       });
     }
   };
-
-  const handleAdd = async (e) => {
-    e.preventDefault();
-    const credentials = { categoryName, description };
+  const handleApprove = async (id) => {
     try {
-      const response = await BlogServices.addData(credentials);
-      if (response.status === 200) {
-        handleCloseAddModal();
-        showAlert('success', 'Add category successfully!');
+      const response = await BlogServices.approve(id);
+
+      if (response && response.status === 200) {
+        showAlert('success', 'Approve post successfully!');
         fetchBlogData();
       } else {
-        handleCloseAddModal();
         setAlert({
           message: response?.response?.data?.message || 'An error occurred. Please check again!',
           severity: 'error',
@@ -151,13 +131,12 @@ const ListBlogView = () => {
         });
       }
     } catch (error) {
-      console.error('Failed to add category:', error);
+      console.error('Failed to approve post:', error);
       setAlert({
         message: error.message || 'An error occurred.',
         severity: 'error',
         isOpen: true,
       });
-      handleCloseAddModal();
     }
   };
 
@@ -221,6 +200,7 @@ const ListBlogView = () => {
                         approved={item.approved}
                         description={item.description}
                         onEdit={(id, updatedData) => handleEditRow(id, updatedData)}
+                        onApprove={(id) => handleApprove(id)}
                       />
                     ))}
 
@@ -262,56 +242,6 @@ const ListBlogView = () => {
         message={alert.message}
         severity={alert.severity}
       />
-
-      <Dialog open={openAdd} onClose={handleCloseAddModal} fullWidth maxWidth="md">
-        <DialogTitle>Add category new</DialogTitle>
-        <IconButton
-          aria-label="close"
-          onClick={handleCloseAddModal}
-          sx={{
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-        <DialogContent>
-          <TextField
-            margin="dense"
-            fullWidth
-            label="Category name"
-            variant="outlined"
-            name="categoryName"
-            value={categoryName}
-            onChange={(e) => setCategoryName(e.target.value)}
-          />
-          <TextField
-            margin="dense"
-            fullWidth
-            label="Description"
-            variant="outlined"
-            name="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            multiline
-            rows={4}
-          />
-
-          <Box display="flex" justifyContent="flex-end" sx={{ mt: 2 }}>
-            <Button
-              variant="contained"
-              color="success"
-              type="submit"
-              onClick={handleAdd}
-              sx={{ px: 10 }}
-            >
-              Add category
-            </Button>
-          </Box>
-        </DialogContent>
-      </Dialog>
     </Stack>
   );
 };

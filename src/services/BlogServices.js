@@ -40,6 +40,16 @@ const BlogServices = {
     return null;
   },
 
+  approve: async (id) => {
+    try {
+      const result = await putApi2(`blog/${id}/approve`, '');
+      return result;
+    } catch (error) {
+      console.log(error);
+    }
+    return null;
+  },
+
   deleteData: async (id) => {
     try {
       const result = await deleteApi(`blog/${id}`);

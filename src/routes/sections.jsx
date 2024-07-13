@@ -14,6 +14,7 @@ export const NutrientPage = lazy(() => import('../pages/NutrientPage/main'));
 export const CustomerPage = lazy(() => import('../pages/CustomerPage/main'));
 export const OrderPage = lazy(() => import('../pages/OrderPage/main'));
 export const BlogPage = lazy(() => import('../pages/BlogPage/main'));
+export const CreateBlogPage = lazy(() => import('../pages/BlogPage/add'));
 
 // ----------------------------------------------------------------------
 
@@ -37,6 +38,7 @@ export default function Router() {
         { path: 'customer', element: <CustomerPage /> },
         { path: 'order', element: <OrderPage /> },
         { path: 'blog', element: <BlogPage /> },
+        { path: 'blog/add', element: <CreateBlogPage /> },
       ],
     },
     {

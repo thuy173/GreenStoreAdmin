@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -8,13 +8,14 @@ import Popover from '@mui/material/Popover';
 import TableRow from '@mui/material/TableRow';
 import MenuItem from '@mui/material/MenuItem';
 import TableCell from '@mui/material/TableCell';
-import { Stack, TextField } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
+import { Stack, TextField, Typography } from '@mui/material';
 
 import Label from 'src/components/label';
+import CustomSnackbar from 'src/components/snackbar/snackbar';
 
 import Iconify from '../../components/iconify';
 
@@ -28,10 +29,22 @@ export default function ListBlogRow({
   createAt,
   approved,
   onEdit,
+  onApprove,
 }) {
   const [open, setOpen] = useState(null);
   const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [openApproveDialog, setOpenApproveDialog] = useState(false);
   const [editData, setEditData] = useState({ categoryName: '', description: '' });
+
+  const [alert, setAlert] = useState({ message: null, severity: 'success', isOpen: false });
+
+  const handleCloseAlert = () => {
+    setAlert({ message: null, severity: 'success', isOpen: false });
+  };
+
+  const showAlert = (severity, message) => {
+    setAlert({ severity, message, isOpen: true });
+  };
 
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
@@ -67,9 +80,36 @@ export default function ListBlogRow({
       await onEdit(blogId, editData);
       handleCloseEditDialog();
     } catch (error) {
-      console.error('Failed to edit category:', error);
+      console.error('Failed to edit blog:', error);
     }
   };
+
+  const handleCloseApproveDialog = () => {
+    setOpenApproveDialog(false);
+  };
+
+  const handleOpenApproveDialog = () => {
+    setOpenApproveDialog(true);
+  };
+
+  const handleApprove = async () => {
+    try {
+      await onApprove(blogId);
+      handleCloseApproveDialog();
+    } catch (error) {
+      console.error('Failed to approve blog:', error);
+    }
+  };
+
+  useEffect(() => {
+    const add = localStorage.getItem('addPost') === 'true';
+
+    if (add) {
+      showAlert('success', 'Created post successfully!');
+      localStorage.removeItem('addPost');
+    }
+  }, []);
+
   return (
     <>
       <TableRow hover tabIndex={-1} role="checkbox">
@@ -82,7 +122,10 @@ export default function ListBlogRow({
         <TableCell align="center">{createAt}</TableCell>
 
         <TableCell align="center">
-          <Label color={approved === true ? 'success' : 'error'}>
+          <Label
+            color={approved === true ? 'success' : 'error'}
+            onClick={approved === false ? handleOpenApproveDialog : undefined}
+          >
             {approved === true ? 'Approved' : 'Unapproved'}
           </Label>
         </TableCell>
@@ -150,6 +193,37 @@ export default function ListBlogRow({
           </Box>
         </DialogContent>
       </Dialog>
+      <Dialog open={openApproveDialog} onClose={handleCloseApproveDialog}>
+        <DialogTitle>Approve post</DialogTitle>
+        <IconButton
+          aria-label="close"
+          onClick={handleCloseApproveDialog}
+          sx={{
+            position: 'absolute',
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+        <DialogContent>
+          <Typography variant="body2" sx={{ mb: 2 }}>
+            Are you sure you want to approve this post?
+          </Typography>
+          <Box display="flex" justifyContent="flex-end">
+            <Button variant="contained" color="error" onClick={handleApprove} sx={{ px: 5, mt: 2 }}>
+              Approve
+            </Button>
+          </Box>
+        </DialogContent>
+      </Dialog>
+      <CustomSnackbar
+        open={alert.isOpen}
+        onClose={handleCloseAlert}
+        message={alert.message}
+        severity={alert.severity}
+      />
     </>
   );
 }
@@ -162,4 +236,5 @@ ListBlogRow.propTypes = {
   createAt: PropTypes.any,
   approved: PropTypes.any,
   onEdit: PropTypes.func,
+  onApprove: PropTypes.func,
 };
