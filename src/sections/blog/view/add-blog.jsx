@@ -70,10 +70,6 @@ const CreateBlog = () => {
     isOpen: false,
   });
 
-  const showAlert = (severity, message) => {
-    setAlert({ severity, message, isOpen: true });
-  };
-
   const handleCloseAlert = () => {
     setAlert({ message: null, severity: 'success', isOpen: false });
   };
@@ -106,13 +102,18 @@ const CreateBlog = () => {
           localStorage.setItem('addPost', 'true');
           navigate('/blog');
         } else {
-          showAlert(
-            'error',
-            response?.response?.data?.message || 'An error occurred. Please check again!'
-          );
+          setAlert({
+            message: response?.response?.data?.message || 'An error occurred. Please check again!',
+            severity: 'error',
+            isOpen: true,
+          });
         }
       } catch (error) {
-        showAlert('error', error.message || 'An error occurred.');
+        setAlert({
+          message: error.message || 'An error occurred.',
+          severity: 'error',
+          isOpen: true,
+        });
       } finally {
         setSubmitting(false);
         setLoading(false);
@@ -123,7 +124,7 @@ const CreateBlog = () => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <Stack>
-        <Grid item xs={12} md={9} ml={4}>
+        <Grid item xs={12} md={9} ml={2}>
           <Breadcrumbs separator={<NavigateNextIcon fontSize="large" />} aria-label="breadcrumb">
             <Link href="/">
               <Stack direction="row" alignItems="center">
@@ -139,7 +140,7 @@ const CreateBlog = () => {
           </Breadcrumbs>
         </Grid>
         <Grid container spacing={2}>
-          <Grid item xs={12} md={9} ml={4}>
+          <Grid item xs={12} md={9} ml={2}>
             <Stack direction="row">
               <FormControl sx={{ my: 2 }} variant="outlined" fullWidth>
                 <OutlinedInput
@@ -170,7 +171,7 @@ const CreateBlog = () => {
               style={{ minHeight: '400px' }}
             />
           </Grid>
-          <Grid item xs={12} md={2.5} ml={4} sx={{ my: 2 }}>
+          <Grid item xs={12} md={2.5} ml={1} sx={{ my: 2 }}>
             <Stack direction="row">
               <FormControl fullWidth>
                 <DropZone

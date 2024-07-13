@@ -1,9 +1,11 @@
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
+import { Typography } from '@mui/material';
 import Popover from '@mui/material/Popover';
 import TableRow from '@mui/material/TableRow';
 import MenuItem from '@mui/material/MenuItem';
@@ -12,7 +14,6 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
-import { Stack, TextField, Typography } from '@mui/material';
 
 import Label from 'src/components/label';
 import CustomSnackbar from 'src/components/snackbar/snackbar';
@@ -28,13 +29,11 @@ export default function ListBlogRow({
   thumbnail,
   createAt,
   approved,
-  onEdit,
   onApprove,
 }) {
   const [open, setOpen] = useState(null);
-  const [openEditDialog, setOpenEditDialog] = useState(false);
+  const navigate = useNavigate();
   const [openApproveDialog, setOpenApproveDialog] = useState(false);
-  const [editData, setEditData] = useState({ categoryName: '', description: '' });
 
   const [alert, setAlert] = useState({ message: null, severity: 'success', isOpen: false });
 
@@ -54,35 +53,10 @@ export default function ListBlogRow({
     setOpen(null);
   };
 
-  const handleOpenEditDialog = () => {
-    setEditData({
-      title,
-      description,
-    });
-    setOpenEditDialog(true);
+  const handleOpenEdit = (id) => {
+    navigate(`/blog/update/${id}`);
   };
 
-  const handleCloseEditDialog = () => {
-    setOpenEditDialog(false);
-  };
-
-  const handleInputChange = (e) => {
-    const { name: inputName, value } = e.target;
-
-    setEditData((prevData) => ({
-      ...prevData,
-      [inputName]: value,
-    }));
-  };
-
-  const handleEdit = async () => {
-    try {
-      await onEdit(blogId, editData);
-      handleCloseEditDialog();
-    } catch (error) {
-      console.error('Failed to edit blog:', error);
-    }
-  };
 
   const handleCloseApproveDialog = () => {
     setOpenApproveDialog(false);
@@ -103,10 +77,15 @@ export default function ListBlogRow({
 
   useEffect(() => {
     const add = localStorage.getItem('addPost') === 'true';
+    const update = localStorage.getItem('updatePost') === 'true';
 
     if (add) {
       showAlert('success', 'Created post successfully!');
       localStorage.removeItem('addPost');
+    }
+    if (update) {
+      showAlert('success', 'Update post successfully!');
+      localStorage.removeItem('updatePost');
     }
   }, []);
 
@@ -144,55 +123,16 @@ export default function ListBlogRow({
         anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <MenuItem onClick={handleOpenEditDialog}>
+        <MenuItem
+          onClick={() => {
+            handleOpenEdit(blogId);
+          }}
+        >
           <Iconify icon="dashicons:update-alt" width={22} sx={{ mr: 2 }} />
           Update
         </MenuItem>
       </Popover>
 
-      <Dialog open={openEditDialog} onClose={handleCloseEditDialog} fullWidth maxWidth="md">
-        <DialogTitle>Update category</DialogTitle>
-        <IconButton
-          aria-label="close"
-          onClick={handleCloseEditDialog}
-          sx={{
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-        <DialogContent>
-          <Stack direction="column">
-            <TextField
-              id="outlined-basic"
-              label="Category name"
-              style={{ borderRadius: '2%', marginTop: '10px' }}
-              variant="outlined"
-              onChange={handleInputChange}
-              value={editData.categoryName ? editData.categoryName : ''}
-              name="categoryName"
-            />
-            <TextField
-              id="outlined-basic"
-              label="Description"
-              style={{ borderRadius: '2%', marginTop: '20px' }}
-              variant="outlined"
-              onChange={handleInputChange}
-              value={editData.description ? editData.description : ''}
-              name="description"
-            />
-          </Stack>
-
-          <Box display="flex" justifyContent="flex-end" sx={{ pt: 2 }}>
-            <Button variant="contained" color="success" onClick={handleEdit} sx={{ px: 10 }}>
-              Update
-            </Button>
-          </Box>
-        </DialogContent>
-      </Dialog>
       <Dialog open={openApproveDialog} onClose={handleCloseApproveDialog}>
         <DialogTitle>Approve post</DialogTitle>
         <IconButton
@@ -235,6 +175,5 @@ ListBlogRow.propTypes = {
   thumbnail: PropTypes.any,
   createAt: PropTypes.any,
   approved: PropTypes.any,
-  onEdit: PropTypes.func,
   onApprove: PropTypes.func,
 };

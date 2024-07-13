@@ -1,4 +1,4 @@
-import { getApi, putApi2, postApi2, deleteApi } from './agent';
+import { getApi, putApi, putApi2, postApi2, deleteApi } from './agent';
 
 const BlogServices = {
   getAll: async () => {
@@ -30,9 +30,9 @@ const BlogServices = {
     }
     return null;
   },
-  editData: async (id, payload) => {
+  updateData: async (id, payload) => {
     try {
-      const result = await putApi2(`blog/${id}`, payload);
+      const result = await putApi(`blog/${id}`, payload);
       return result;
     } catch (error) {
       console.log(error);
