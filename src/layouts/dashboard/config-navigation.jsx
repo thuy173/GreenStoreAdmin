@@ -40,7 +40,7 @@ const navConfig = [
   {
     title: 'Blog',
     path: '/blog',
-    icon: icon('ic_user'),
+    icon: icon('ic_blog'),
   },
 ];
 

@@ -11,7 +11,7 @@ export default function AppView() {
   return (
     <Container maxWidth="xl">
       <Stack direction="row" spacing={2}>
-        <Grid xs={12} sm={6} md={4}>
+        <Grid item xs={12} sm={6} md={4}>
           <CardDashboard
             title="Income"
             total={formatVND(1)}
@@ -20,7 +20,7 @@ export default function AppView() {
           />
         </Grid>
 
-        <Grid xs={12} sm={6} md={4}>
+        <Grid item xs={12} sm={6} md={4}>
           <CardDashboard
             title="Product"
             total={1}
@@ -29,7 +29,7 @@ export default function AppView() {
           />
         </Grid>
 
-        <Grid xs={12} sm={6} md={4}>
+        <Grid item xs={12} sm={6} md={4}>
           <CardDashboard
             title="Customer"
             total={1}
@@ -38,7 +38,7 @@ export default function AppView() {
           />
         </Grid>
 
-        <Grid xs={12} sm={6} md={4}>
+        <Grid item xs={12} sm={6} md={4}>
           <CardDashboard
             title="Customer"
             total={1}

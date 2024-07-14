@@ -166,7 +166,7 @@ ListProductRow.propTypes = {
   price: PropTypes.any,
   unitOfMeasure: PropTypes.any,
   productImages: PropTypes.any,
-  status: PropTypes.bool,
+  status: PropTypes.number,
   selected: PropTypes.any,
   onHide: PropTypes.func,
   onShow: PropTypes.func,
