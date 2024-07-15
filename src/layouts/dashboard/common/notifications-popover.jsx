@@ -10,6 +10,7 @@ import Divider from '@mui/material/Divider';
 import Popover from '@mui/material/Popover';
 import IconButton from '@mui/material/IconButton';
 import ListSubheader from '@mui/material/ListSubheader';
+import { Avatar, Typography, ListItemText, ListItemAvatar, ListItemButton } from '@mui/material';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
@@ -30,8 +31,19 @@ export default function NotificationsPopover() {
   };
 
   const fetchNotifications = useCallback((pages) => {
-    fetch(`http://localhost:8086/api/order/notification?page=${pages}&size=3`)
-      .then((response) => response.json())
+    fetch(`http://localhost:8086/api/notification?page=${pages}&size=3`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.text(); // Retrieve response as text
+      })
+      .then((text) => {
+        if (!text) {
+          return { content: [] }; // Return empty content if response is empty
+        }
+        return JSON.parse(text); // Parse the text as JSON
+      })
       .then((data) => {
         if (data.content.length === 0) {
           setHasMore(false);
@@ -42,6 +54,9 @@ export default function NotificationsPopover() {
           }));
           setNotifications((prevNotifications) => [...prevNotifications, ...updatedNotifications]);
         }
+      })
+      .catch((error) => {
+        console.error('Error fetching notifications:', error);
       });
   }, []);
 
@@ -55,7 +70,7 @@ export default function NotificationsPopover() {
   };
 
   useEffect(() => {
-    fetchNotifications(1);
+    fetchNotifications(0);
     const socket = new SockJS('http://localhost:8086/ws');
     const stompClient = new Client({
       webSocketFactory: () => socket,
@@ -71,6 +86,13 @@ export default function NotificationsPopover() {
         const newOrder = JSON.parse(message.body);
         newOrder.isNew = true;
         setNotifications((prevNotifications) => [newOrder, ...prevNotifications]);
+      });
+
+      stompClient.subscribe('/topic/blogs', (message) => {
+        console.log('Received message:', message);
+        const newBlog = JSON.parse(message.body);
+        newBlog.isNew = true;
+        setNotifications((prevNotifications) => [newBlog, ...prevNotifications]);
       });
     };
 
@@ -121,13 +143,41 @@ export default function NotificationsPopover() {
           />
           <Divider sx={{ borderStyle: 'dashed' }} />
 
-          <ol>
-            {notifications.map((order, index) => (
-              <li key={index} style={{ fontWeight: order.isNew ? 'bold' : 'normal' }}>
-                {order.fullName} - {order.orderCode}
-              </li>
-            ))}
-          </ol>
+          {notifications.map((notification, index) => (
+            <ListItemButton
+              key={index}
+              style={{ fontWeight: notification.isNew ? 'bold' : 'normal' }}
+              sx={{
+                py: 1.5,
+                px: 2.5,
+                mt: '1px',
+                ...(notification.isUnRead && {
+                  bgcolor: 'action.selected',
+                }),
+              }}
+            >
+              <ListItemAvatar>
+                <Avatar sx={{ bgcolor: 'background.neutral' }}>{notification.thumbnail}</Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                primary={notification.fullName}
+                secondary={
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      mt: 0.5,
+                      display: 'flex',
+                      alignItems: 'center',
+                      color: 'text.disabled',
+                    }}
+                  >
+                    <Iconify icon="eva:clock-outline" sx={{ mr: 0.5, width: 16, height: 16 }} />
+                    {/* {fToNow(notification.createdAt)} */}
+                  </Typography>
+                }
+              />
+            </ListItemButton>
+          ))}
         </Scrollbar>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
