@@ -262,7 +262,7 @@ const AddProductView = () => {
   }, []);
 
   return (
-    <Stack p={3}>
+    <Stack px={3}>
       <Formik
         onSubmit={(values, actions) => {
           console.log('onSubmit called');
@@ -304,7 +304,7 @@ const AddProductView = () => {
               {isSubmitting ? (
                 <LoadingPage />
               ) : (
-                <Stack px={3} py={5}>
+                <Stack p={2}>
                   <Stack direction="column" justifyContent="center" spacing={2} marginBottom={3}>
                     <Stack>
                       <TextField

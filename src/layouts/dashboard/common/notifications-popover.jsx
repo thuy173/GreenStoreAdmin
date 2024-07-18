@@ -1,5 +1,6 @@
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
+import { useNavigate } from 'react-router-dom';
 import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
@@ -12,14 +13,18 @@ import IconButton from '@mui/material/IconButton';
 import ListSubheader from '@mui/material/ListSubheader';
 import { Avatar, Typography, ListItemText, ListItemAvatar, ListItemButton } from '@mui/material';
 
+import { fToNow } from 'src/utils/format-time';
+
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 
 export default function NotificationsPopover() {
+  const navigate = useNavigate();
   const [notifications, setNotifications] = useState([]);
   const [open, setOpen] = useState(null);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+  const [initialLoad, setInitialLoad] = useState(false);
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -31,18 +36,18 @@ export default function NotificationsPopover() {
   };
 
   const fetchNotifications = useCallback((pages) => {
-    fetch(`http://localhost:8086/api/notification?page=${pages}&size=3`)
+    fetch(`http://localhost:8086/api/notification?page=${pages}&size=10`)
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-        return response.text(); // Retrieve response as text
+        return response.text();
       })
       .then((text) => {
         if (!text) {
-          return { content: [] }; // Return empty content if response is empty
+          return { content: [] };
         }
-        return JSON.parse(text); // Parse the text as JSON
+        return JSON.parse(text);
       })
       .then((data) => {
         if (data.content.length === 0) {
@@ -52,7 +57,16 @@ export default function NotificationsPopover() {
             ...notification,
             isNew: false,
           }));
-          setNotifications((prevNotifications) => [...prevNotifications, ...updatedNotifications]);
+          setNotifications((prevNotifications) => {
+            const uniqueNotifications = updatedNotifications.filter(
+              (newNotification) =>
+                !prevNotifications.some(
+                  (prevNotification) =>
+                    prevNotification.notificationId === newNotification.notificationId
+                )
+            );
+            return [...prevNotifications, ...uniqueNotifications];
+          });
         }
       })
       .catch((error) => {
@@ -70,7 +84,11 @@ export default function NotificationsPopover() {
   };
 
   useEffect(() => {
-    fetchNotifications(0);
+    if (!initialLoad) {
+      fetchNotifications(0);
+      setInitialLoad(true);
+    }
+
     const socket = new SockJS('http://localhost:8086/ws');
     const stompClient = new Client({
       webSocketFactory: () => socket,
@@ -85,14 +103,32 @@ export default function NotificationsPopover() {
         console.log('Received message:', message);
         const newOrder = JSON.parse(message.body);
         newOrder.isNew = true;
-        setNotifications((prevNotifications) => [newOrder, ...prevNotifications]);
+        setNotifications((prevNotifications) => {
+          if (
+            prevNotifications.some(
+              (notification) => notification.notificationId === newOrder.notificationId
+            )
+          ) {
+            return prevNotifications;
+          }
+          return [newOrder, ...prevNotifications];
+        });
       });
 
       stompClient.subscribe('/topic/blogs', (message) => {
         console.log('Received message:', message);
         const newBlog = JSON.parse(message.body);
         newBlog.isNew = true;
-        setNotifications((prevNotifications) => [newBlog, ...prevNotifications]);
+        setNotifications((prevNotifications) => {
+          if (
+            prevNotifications.some(
+              (notification) => notification.notificationId === newBlog.notificationId
+            )
+          ) {
+            return prevNotifications;
+          }
+          return [newBlog, ...prevNotifications];
+        });
       });
     };
 
@@ -100,7 +136,7 @@ export default function NotificationsPopover() {
     return () => {
       stompClient.deactivate();
     };
-  }, [fetchNotifications]);
+  }, [fetchNotifications, initialLoad]);
 
   const handleMoreClick = () => {
     if (hasMore) {
@@ -108,6 +144,15 @@ export default function NotificationsPopover() {
       setPage(nextPage);
       fetchNotifications(nextPage);
     }
+  };
+
+  const handleNotificationClick = (notification) => {
+    if (notification.orderCode) {
+      navigate(`/order`);
+    } else if (notification.title) {
+      navigate(`/blog`);
+    }
+    handleClose();
   };
 
   return (
@@ -132,7 +177,7 @@ export default function NotificationsPopover() {
           },
         }}
       >
-        <Scrollbar sx={{ height: { xs: 140, sm: 'auto' } }}>
+        <Scrollbar sx={{ height: { xs: 340 } }}>
           <List
             disablePadding
             subheader={
@@ -146,6 +191,7 @@ export default function NotificationsPopover() {
           {notifications.map((notification, index) => (
             <ListItemButton
               key={index}
+              onClick={() => handleNotificationClick(notification)}
               style={{ fontWeight: notification.isNew ? 'bold' : 'normal' }}
               sx={{
                 py: 1.5,
@@ -157,10 +203,35 @@ export default function NotificationsPopover() {
               }}
             >
               <ListItemAvatar>
-                <Avatar sx={{ bgcolor: 'background.neutral' }}>{notification.thumbnail}</Avatar>
+                {notification.thumbnail ? (
+                  <Avatar sx={{ bgcolor: 'background.neutral' }} src={notification.thumbnail} />
+                ) : (
+                  <Avatar sx={{ bgcolor: 'background.neutral' }} src={notification.avatar} />
+                )}
               </ListItemAvatar>
               <ListItemText
-                primary={notification.fullName}
+                primary={
+                  <>
+                    <Typography noWrap component="span">
+                      {notification.fullName || `Blog new:  ${notification.title}`}
+                    </Typography>
+                    {notification.orderCode && (
+                      <Typography
+                        component="span"
+                        variant="body2"
+                        sx={{
+                          fontSize: '0.8rem',
+                          ml: 1,
+                          textOverflow: 'ellipsis',
+                          overflow: 'hidden',
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
+                        order: {notification.orderCode}
+                      </Typography>
+                    )}
+                  </>
+                }
                 secondary={
                   <Typography
                     variant="caption"
@@ -172,7 +243,7 @@ export default function NotificationsPopover() {
                     }}
                   >
                     <Iconify icon="eva:clock-outline" sx={{ mr: 0.5, width: 16, height: 16 }} />
-                    {/* {fToNow(notification.createdAt)} */}
+                    {fToNow(notification.orderDate) || fToNow(notification.createdAt)}
                   </Typography>
                 }
               />
