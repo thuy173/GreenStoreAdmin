@@ -45,7 +45,7 @@ const navConfig = [
   {
     title: 'Voucher',
     path: '/voucher',
-    icon: icon('ic_blog'),
+    icon: icon('ic_voucher'),
   },
 ];
 

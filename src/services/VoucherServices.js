@@ -29,6 +29,15 @@ const VoucherServices = {
     }
     return null;
   },
+  showData: async (id, payload) => {
+    try {
+      const result = await putApi2(`voucher/active/${id}`, payload);
+      return result;
+    } catch (error) {
+      console.log(error);
+    }
+    return null;
+  },
 
   deleteData: async (id) => {
     try {

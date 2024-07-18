@@ -15,6 +15,7 @@ import {
   Button,
   Dialog,
   TableRow,
+  Checkbox,
   TableCell,
   TextField,
   IconButton,
@@ -24,6 +25,7 @@ import {
   DialogContent,
   OutlinedInput,
   InputAdornment,
+  FormControlLabel,
 } from '@mui/material';
 
 import { emptyRows, applyFilter, getComparator } from 'src/utils/tableUtils';
@@ -65,7 +67,8 @@ const ListVoucherView = () => {
   const [discount, setDiscount] = useState('');
   const [minOrderAmount, setMinOrderAmount] = useState('');
   const [alert, setAlert] = useState({ message: null, severity: 'success', isOpen: false });
-  const [expiryDate, setExpiryDate] = useState();
+  const [expiryDate, setExpiryDate] = useState('');
+  const [status, setStatus] = useState(false);
 
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
@@ -173,11 +176,39 @@ const ListVoucherView = () => {
     }
   };
 
+  const handleShow = async (id) => {
+    try {
+      const response = await VoucherServices.showData(id);
+      if (response && response.status === 204) {
+        showAlert('success', 'Active voucher successfully!');
+        fetchVoucherData();
+      } else {
+        setAlert({
+          message: response?.response?.data?.message || 'An error occurred. Please check again!',
+          severity: 'error',
+          isOpen: true,
+        });
+      }
+    } catch (error) {
+      console.error('Failed to active voucher:', error);
+      setAlert({
+        message: error.message || 'An error occurred.',
+        severity: 'error',
+        isOpen: true,
+      });
+    }
+  };
+
   const handleAdd = async (e) => {
     e.preventDefault();
     const formattedExpiryDate = expiryDate ? new Date(expiryDate) : null;
 
-    const credentials = { discount, minOrderAmount, expiryDate: formatTime(formattedExpiryDate) };
+    const credentials = {
+      discount,
+      minOrderAmount,
+      expiryDate: formatTime(formattedExpiryDate),
+      status,
+    };
     try {
       const response = await VoucherServices.addData(credentials);
       if (response.status === 200) {
@@ -245,6 +276,7 @@ const ListVoucherView = () => {
                   { id: 'discount', label: 'Discount', align: 'center' },
                   { id: 'minOrderAmount', label: 'Min order amount', align: 'center' },
                   { id: 'expiryDate', label: 'Expiry Date', align: 'center' },
+                  { id: 'status', label: 'Status', align: 'center' },
                   { id: '' },
                 ]}
               />
@@ -260,8 +292,10 @@ const ListVoucherView = () => {
                         discount={item.discount}
                         minOrderAmount={item.minOrderAmount}
                         expiryDate={item.expiryDate}
+                        status={item.status}
                         onDelete={handleDeleteRow}
                         onEdit={(id, updatedData) => handleEditRow(id, updatedData)}
+                        onShow={handleShow}
                       />
                     ))}
 
@@ -355,6 +389,19 @@ const ListVoucherView = () => {
               }}
               name="expiryDate"
               sx={{ width: '100%' }}
+            />
+          </Stack>
+          <Stack direction="row" alignItems="center" sx={{ mt: 2 }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={status}
+                  onChange={(e) => setStatus(e.target.checked)}
+                  name="status"
+                  color="primary"
+                />
+              }
+              label="Active"
             />
           </Stack>
           <Box display="flex" justifyContent="flex-end" sx={{ mt: 2 }}>

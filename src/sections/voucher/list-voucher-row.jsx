@@ -22,6 +22,8 @@ import {
   InputAdornment,
 } from '@mui/material';
 
+import Label from 'src/components/label';
+
 import Iconify from '../../components/iconify';
 
 // ----------------------------------------------------------------------
@@ -44,8 +46,10 @@ export default function ListVoucherRow({
   discount,
   minOrderAmount,
   expiryDate,
+  status,
   onDelete,
   onEdit,
+  onShow,
 }) {
   const [open, setOpen] = useState(null);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
@@ -111,6 +115,13 @@ export default function ListVoucherRow({
       console.error('Failed to edit voucher:', error);
     }
   };
+  const handleShow = async () => {
+    try {
+      await onShow(voucherId);
+    } catch (error) {
+      console.error('Failed to show product:', error);
+    }
+  };
 
   return (
     <>
@@ -120,6 +131,11 @@ export default function ListVoucherRow({
         <TableCell align="center">{discount}</TableCell>
         <TableCell align="center">{minOrderAmount}</TableCell>
         <TableCell align="center">{expiryDate}</TableCell>
+        <TableCell align="center">
+          <Label color={status === true ? 'success' : 'error'}>
+            {status === true ? 'Active' : 'Inactive'}
+          </Label>
+        </TableCell>
 
         <TableCell align="right">
           <IconButton onClick={handleOpenMenu}>
@@ -140,9 +156,13 @@ export default function ListVoucherRow({
           Update
         </MenuItem>
 
+        <MenuItem onClick={handleShow}>
+          <Iconify icon="bxs:show" width={22} sx={{ mr: 2 }} />
+          Active
+        </MenuItem>
         <MenuItem onClick={handleOpenDeleteDialog} sx={{ color: 'error.main' }}>
-          <Iconify icon="eva:trash-2-outline" width={22} sx={{ mr: 2 }} />
-          Delete
+          <Iconify icon="bxs:hide" width={22} sx={{ mr: 2 }} />
+          Hidden
         </MenuItem>
       </Popover>
 
@@ -235,11 +255,13 @@ export default function ListVoucherRow({
 }
 
 ListVoucherRow.propTypes = {
-  voucherId: PropTypes.any,
-  code: PropTypes.any,
+  voucherId: PropTypes.number,
+  code: PropTypes.string,
   discount: PropTypes.any,
   minOrderAmount: PropTypes.any,
+  status: PropTypes.bool,
   expiryDate: PropTypes.any,
   onDelete: PropTypes.func,
   onEdit: PropTypes.func,
+  onShow: PropTypes.func,
 };
