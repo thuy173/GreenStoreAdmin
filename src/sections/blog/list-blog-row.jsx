@@ -34,8 +34,23 @@ export default function ListBlogRow({
   const [open, setOpen] = useState(null);
   const navigate = useNavigate();
   const [openApproveDialog, setOpenApproveDialog] = useState(false);
-
   const [alert, setAlert] = useState({ message: null, severity: 'success', isOpen: false });
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const vietnamOffset = 7 * 60;
+    const localOffset = date.getTimezoneOffset();
+    const vietnamTime = new Date(date.getTime() + (vietnamOffset + localOffset) * 60000);
+
+    const yearD = vietnamTime.getFullYear();
+    const month = String(vietnamTime.getMonth() + 1).padStart(2, '0');
+    const day = String(vietnamTime.getDate()).padStart(2, '0');
+    const hours = String(vietnamTime.getHours()).padStart(2, '0');
+    const minutes = String(vietnamTime.getMinutes()).padStart(2, '0');
+    const seconds = String(vietnamTime.getSeconds()).padStart(2, '0');
+
+    return `${day}-${month}-${yearD} | ${hours}:${minutes}:${seconds}`;
+  };
 
   const handleCloseAlert = () => {
     setAlert({ message: null, severity: 'success', isOpen: false });
@@ -98,7 +113,7 @@ export default function ListBlogRow({
         </TableCell>
         <TableCell align="center">{title}</TableCell>
         <TableCell align="center">{description}</TableCell>
-        <TableCell align="center">{createAt}</TableCell>
+        <TableCell align="center">{formatDate(createAt)}</TableCell>
 
         <TableCell align="center">
           <Label

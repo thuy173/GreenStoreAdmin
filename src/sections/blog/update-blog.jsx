@@ -67,6 +67,22 @@ export default function UpdateBlog({ initialValues }) {
     setAlert({ message: null, severity: 'success', isOpen: false });
   };
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const vietnamOffset = 7 * 60;
+    const localOffset = date.getTimezoneOffset();
+    const vietnamTime = new Date(date.getTime() + (vietnamOffset + localOffset) * 60000);
+
+    const yearD = vietnamTime.getFullYear();
+    const month = String(vietnamTime.getMonth() + 1).padStart(2, '0');
+    const day = String(vietnamTime.getDate()).padStart(2, '0');
+    const hours = String(vietnamTime.getHours()).padStart(2, '0');
+    const minutes = String(vietnamTime.getMinutes()).padStart(2, '0');
+    const seconds = String(vietnamTime.getSeconds()).padStart(2, '0');
+
+    return `${day}-${month}-${yearD} | ${hours}:${minutes}:${seconds}`;
+  };
+
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       const imageFile = e.target.files[0];
@@ -119,14 +135,14 @@ export default function UpdateBlog({ initialValues }) {
     <Stack pt={1}>
       <Stack direction="column" justifyContent="center" alignItems="center" py={2}>
         <Typography variant="subtitle1" color="textSecondary" component="div">
-          Author: {initialValues.author}
+          Author: {initialValues.author || 'GreenStore'}
         </Typography>
         <Typography variant="caption" color="textSecondary" component="div">
-          Create at: {initialValues.createdAt}
+          Create at: {formatDate(initialValues.createdAt)}
         </Typography>
         {initialValues.updatedAt && (
           <Typography variant="caption" color="textSecondary" component="div">
-            Update at: {initialValues.updatedAt}
+            Update at: {formatDate(initialValues.updatedAt)}
           </Typography>
         )}
       </Stack>
