@@ -28,17 +28,21 @@ import Iconify from '../../components/iconify';
 
 // ----------------------------------------------------------------------
 
-function formatTime(date) {
-  const years = date.getUTCFullYear();
-  const month = (date.getUTCMonth() + 1).toString().padStart(2, '0');
-  const day = date.getUTCDate().toString().padStart(2, '0');
-  const hours = date.getUTCHours().toString().padStart(2, '0');
-  const minutes = date.getUTCMinutes().toString().padStart(2, '0');
-  const seconds = '00';
-  const milliseconds = '000';
+const formatToDateTimeLocal = (date) => {
+  if (!date) return '';
 
-  return `${years}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`;
-}
+  const d = new Date(date);
+  const offset = d.getTimezoneOffset() * 60000;
+  const localDate = new Date(d.getTime() - offset);
+
+  const year = localDate.getFullYear();
+  const month = String(localDate.getMonth() + 1).padStart(2, '0');
+  const day = String(localDate.getDate()).padStart(2, '0');
+  const hours = String(localDate.getHours()).padStart(2, '0');
+  const minutes = String(localDate.getMinutes()).padStart(2, '0');
+
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+};
 
 export default function ListVoucherRow({
   voucherId,
@@ -58,14 +62,13 @@ export default function ListVoucherRow({
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    const vietnamOffset = 7 * 60;
-    const localOffset = date.getTimezoneOffset();
-    const vietnamTime = new Date(date.getTime() + (vietnamOffset + localOffset) * 60000);
+    const vietnamOffset = 7 * 60 * 60000;
+    const vietnamTime = new Date(date.getTime() + vietnamOffset);
 
     const yearD = vietnamTime.getFullYear();
     const month = String(vietnamTime.getMonth() + 1).padStart(2, '0');
     const day = String(vietnamTime.getDate()).padStart(2, '0');
-    const hours = String(vietnamTime.getHours() + 7).padStart(2, '0');
+    const hours = String(vietnamTime.getHours()).padStart(2, '0');
     const minutes = String(vietnamTime.getMinutes()).padStart(2, '0');
     const seconds = String(vietnamTime.getSeconds()).padStart(2, '0');
 
@@ -98,7 +101,7 @@ export default function ListVoucherRow({
   };
 
   const handleOpenEditDialog = () => {
-    const formattedExpiryDate = expiryDate ? new Date(expiryDate).toISOString().slice(0, 16) : '';
+    const formattedExpiryDate = formatToDateTimeLocal(expiryDate);
 
     setEditData({
       discount,
@@ -122,7 +125,9 @@ export default function ListVoucherRow({
   };
 
   const handleEdit = async () => {
-    const formattedExpiryDate = editData.expiryDate ? formatTime(editData.expiryDate) : null;
+    const formattedExpiryDate = editData.expiryDate
+      ? new Date(editData.expiryDate).toISOString()
+      : null;
 
     try {
       await onEdit(voucherId, { ...editData, expiryDate: formattedExpiryDate });
@@ -131,6 +136,7 @@ export default function ListVoucherRow({
       console.error('Failed to edit voucher:', error);
     }
   };
+
   const handleShow = async () => {
     try {
       await onShow(voucherId);

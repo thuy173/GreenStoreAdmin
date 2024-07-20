@@ -273,8 +273,8 @@ const ListVoucherView = () => {
                 onRequestSort={handleSort}
                 headLabel={[
                   { id: 'code', label: 'Code', align: 'center' },
-                  { id: 'discount', label: 'Discount', align: 'center' },
-                  { id: 'minOrderAmount', label: 'Min order amount', align: 'center' },
+                  { id: 'discount', label: 'Discount ( % )', align: 'center' },
+                  { id: 'minOrderAmount', label: 'Min order amount ( $ )', align: 'center' },
                   { id: 'expiryDate', label: 'Expiry Date', align: 'center' },
                   { id: 'status', label: 'Status', align: 'center' },
                   { id: '' },
