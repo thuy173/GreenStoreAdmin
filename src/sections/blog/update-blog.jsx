@@ -15,6 +15,8 @@ import {
   CircularProgress,
 } from '@mui/material';
 
+import { formatDate } from 'src/utils/format-time';
+
 import BlogServices from 'src/services/BlogServices';
 
 import CustomSnackbar from 'src/components/snackbar/snackbar';
@@ -65,22 +67,6 @@ export default function UpdateBlog({ initialValues }) {
 
   const handleCloseAlert = () => {
     setAlert({ message: null, severity: 'success', isOpen: false });
-  };
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const vietnamOffset = 7 * 60;
-    const localOffset = date.getTimezoneOffset();
-    const vietnamTime = new Date(date.getTime() + (vietnamOffset + localOffset) * 60000);
-
-    const yearD = vietnamTime.getFullYear();
-    const month = String(vietnamTime.getMonth() + 1).padStart(2, '0');
-    const day = String(vietnamTime.getDate()).padStart(2, '0');
-    const hours = String(vietnamTime.getHours()).padStart(2, '0');
-    const minutes = String(vietnamTime.getMinutes()).padStart(2, '0');
-    const seconds = String(vietnamTime.getSeconds()).padStart(2, '0');
-
-    return `${day}-${month}-${yearD} | ${hours}:${minutes}:${seconds}`;
   };
 
   const handleFileChange = (e) => {

@@ -61,7 +61,7 @@ const ListVoucherView = () => {
   const [orderBy, setOrderBy] = useState('name');
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [filterValue, setFilterValue] = useState('');
-  const filterFields = ['code', 'discount'];
+  const filterFields = ['code', 'expiryDate'];
   const [voucherData, setVoucherData] = useState([]);
   const [openAdd, setOpenAdd] = useState(false);
   const [discount, setDiscount] = useState('');

@@ -1,26 +1,25 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { useNavigate } from 'react-router-dom';
 
-import Box from '@mui/material/Box';
 import { Select } from '@mui/material';
-import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import Popover from '@mui/material/Popover';
 import TableRow from '@mui/material/TableRow';
 import MenuItem from '@mui/material/MenuItem';
 import TableCell from '@mui/material/TableCell';
-import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
+
+import { formatDateVietNam } from 'src/utils/format-time';
 
 import OrderServices from 'src/services/OrderServices';
 
 import CustomSnackbar from 'src/components/snackbar/snackbar';
 
 import Iconify from '../../components/iconify';
+import DetailDialogView from './view/detail-view';
 
 // ----------------------------------------------------------------------
 
@@ -35,30 +34,12 @@ export default function ListOrderRow({
   shippingAddress,
   status,
   onLoad,
-  onHide,
 }) {
-  const navigate = useNavigate();
-
   const [open, setOpen] = useState(null);
-  const [openHideDialog, setOpenHideDialog] = useState(false);
+  const [openDetailDialog, setOpenDetailDialog] = useState(false);
   const [alert, setAlert] = useState({ message: null, severity: 'success', isOpen: false });
 
   const statuses = ['PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELED', 'RETURNED'];
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const vietnamOffset = 7 * 60 * 60000;
-    const vietnamTime = new Date(date.getTime() + vietnamOffset);
-
-    const yearD = vietnamTime.getFullYear();
-    const month = String(vietnamTime.getMonth() + 1).padStart(2, '0');
-    const day = String(vietnamTime.getDate()).padStart(2, '0');
-    const hours = String(vietnamTime.getHours()).padStart(2, '0');
-    const minutes = String(vietnamTime.getMinutes()).padStart(2, '0');
-    const seconds = String(vietnamTime.getSeconds()).padStart(2, '0');
-
-    return `${day}-${month}-${yearD} | ${hours}:${minutes}:${seconds}`;
-  };
 
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
@@ -68,25 +49,12 @@ export default function ListOrderRow({
     setOpen(null);
   };
 
-  const handleOpenHideDialog = () => {
-    setOpenHideDialog(true);
+  const handleOpenDetailDialog = () => {
+    setOpenDetailDialog(true);
   };
 
-  const handleCloseHideDialog = () => {
-    setOpenHideDialog(false);
-  };
-
-  const handleHide = async () => {
-    try {
-      await onHide(orderId);
-      handleCloseHideDialog();
-    } catch (error) {
-      console.error('Failed to hide product:', error);
-    }
-  };
-
-  const handleDetailOrder = () => {
-    navigate(`/order/detail/${orderId}`);
+  const handleCloseDetailDialog = () => {
+    setOpenDetailDialog(false);
   };
 
   const showAlert = (severity, message) => {
@@ -124,7 +92,7 @@ export default function ListOrderRow({
 
   return (
     <>
-      <TableRow hover tabIndex={-1}>
+      <TableRow hover tabIndex={-1} onClick={handleOpenDetailDialog}>
         <TableCell align="center">{orderId}</TableCell>
 
         <TableCell align="center">{fullName}</TableCell>
@@ -135,7 +103,7 @@ export default function ListOrderRow({
 
         <TableCell align="center">{totalAmount}</TableCell>
 
-        <TableCell align="center">{formatDate(orderDate)}</TableCell>
+        <TableCell align="center">{formatDateVietNam(orderDate)}</TableCell>
 
         <TableCell align="center">
           <Select
@@ -167,22 +135,17 @@ export default function ListOrderRow({
         anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <MenuItem onClick={handleDetailOrder}>
-          <Iconify icon="dashicons:update-alt" width={22} sx={{ mr: 2 }} />
+        <MenuItem onClick={handleOpenDetailDialog}>
+          <Iconify icon="bxs:detail" width={22} sx={{ mr: 2 }} />
           Detail
-        </MenuItem>
-
-        <MenuItem onClick={handleOpenHideDialog} sx={{ color: 'error.main' }}>
-          <Iconify icon="bxs:hide" width={22} sx={{ mr: 2 }} />
-          Hidden
         </MenuItem>
       </Popover>
 
-      <Dialog open={openHideDialog} onClose={handleCloseHideDialog}>
-        <DialogTitle>Hide product</DialogTitle>
+      <Dialog open={openDetailDialog} onClose={handleCloseDetailDialog} fullWidth maxWidth="lg">
+        <DialogTitle>Detail Order</DialogTitle>
         <IconButton
           aria-label="close"
-          onClick={handleCloseHideDialog}
+          onClick={handleCloseDetailDialog}
           sx={{
             position: 'absolute',
             right: 8,
@@ -193,14 +156,7 @@ export default function ListOrderRow({
           <CloseIcon />
         </IconButton>
         <DialogContent>
-          <Typography variant="body2" sx={{ mb: 2 }}>
-            Are you sure you want to hide this product?
-          </Typography>
-          <Box display="flex" justifyContent="flex-end">
-            <Button variant="contained" color="error" onClick={handleHide} sx={{ px: 5, mt: 2 }}>
-              Hide
-            </Button>
-          </Box>
+          <DetailDialogView orderId={orderId} />
         </DialogContent>
       </Dialog>
       <CustomSnackbar
@@ -224,5 +180,4 @@ ListOrderRow.propTypes = {
   shippingAddress: PropTypes.any,
   status: PropTypes.any,
   onLoad: PropTypes.any,
-  onHide: PropTypes.func,
 };
