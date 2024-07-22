@@ -1,5 +1,5 @@
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
@@ -12,22 +12,13 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 
 import { logOut } from 'src/redux/actions/authActions';
-import { getLocalStorage, clearLocalStorage } from 'src/services/agent';
+import { clearLocalStorage } from 'src/services/agent';
 
 export default function AccountPopover() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(null);
-  const [userId, setUserId] = useState('');
-  const [roleUser, setRoleUser] = useState('');
-
-  useEffect(() => {
-    const storedUserId = getLocalStorage('uD');
-    setUserId(storedUserId);
-    const storeRole = getLocalStorage('rE');
-    setRoleUser(storeRole);
-  }, []);
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -40,11 +31,6 @@ export default function AccountPopover() {
   const handleLogout = () => {
     clearLocalStorage();
     dispatch(logOut(navigate));
-  };
-
-  const handleProfileClick = () => {
-    handleClose();
-    navigate(`/teacherProfile/${userId}`);
   };
 
   return (
@@ -91,16 +77,11 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2 }}>
           <Typography variant="subtitle2" noWrap>
-            T
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            T
+            Admin
           </Typography>
         </Box>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
-
-        {roleUser !== 'Admin' && <MenuItem onClick={handleProfileClick}>Profile</MenuItem>}
 
         <Divider sx={{ borderStyle: 'dashed', m: 0 }} />
         <MenuItem

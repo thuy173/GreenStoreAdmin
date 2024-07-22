@@ -27,9 +27,11 @@ export default defineConfig({
     ],
   },
   server: {
+    open: false,
     port: 3031,
   },
   preview: {
     port: 3031,
   },
+  cacheDir: './.vite',
 });
