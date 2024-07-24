@@ -213,6 +213,7 @@ const ListOrderView = () => {
                       <ListOrderRow
                         key={item.orderId}
                         orderId={item.orderId}
+                        orderCode={item.orderCode}
                         customerId={item.customerId}
                         fullName={item.fullName}
                         email={item.email}

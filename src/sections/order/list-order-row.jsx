@@ -25,6 +25,7 @@ import DetailDialogView from './view/detail-view';
 
 export default function ListOrderRow({
   orderId,
+  orderCode,
   customerId,
   fullName,
   email,
@@ -93,7 +94,7 @@ export default function ListOrderRow({
   return (
     <>
       <TableRow hover tabIndex={-1} onClick={handleOpenDetailDialog}>
-        <TableCell align="center">{orderId}</TableCell>
+        <TableCell align="center">{orderCode}</TableCell>
 
         <TableCell align="center">{fullName}</TableCell>
 
@@ -170,14 +171,15 @@ export default function ListOrderRow({
 }
 
 ListOrderRow.propTypes = {
-  orderId: PropTypes.any,
-  customerId: PropTypes.any,
-  fullName: PropTypes.any,
-  email: PropTypes.any,
-  phoneNumber: PropTypes.any,
+  orderId: PropTypes.number,
+  orderCode: PropTypes.any,
+  customerId: PropTypes.number,
+  fullName: PropTypes.string,
+  email: PropTypes.string,
+  phoneNumber: PropTypes.string,
   orderDate: PropTypes.any,
   totalAmount: PropTypes.any,
-  shippingAddress: PropTypes.any,
+  shippingAddress: PropTypes.string,
   status: PropTypes.any,
   onLoad: PropTypes.any,
 };

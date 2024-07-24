@@ -13,7 +13,7 @@ import IconButton from '@mui/material/IconButton';
 import ListSubheader from '@mui/material/ListSubheader';
 import { Avatar, Typography, ListItemText, ListItemAvatar, ListItemButton } from '@mui/material';
 
-import { fToNow } from 'src/utils/format-time';
+import { formatDateVietNam } from 'src/utils/format-time';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
@@ -243,7 +243,7 @@ export default function NotificationsPopover() {
                     }}
                   >
                     <Iconify icon="eva:clock-outline" sx={{ mr: 0.5, width: 16, height: 16 }} />
-                    {fToNow(notification.orderDate) || fToNow(notification.createdAt)}
+                    {formatDateVietNam(notification.createAt)}
                   </Typography>
                 }
               />
