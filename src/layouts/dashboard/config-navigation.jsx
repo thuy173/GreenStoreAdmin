@@ -47,6 +47,11 @@ const navConfig = [
     path: '/voucher',
     icon: icon('ic_voucher'),
   },
+  {
+    title: 'Combo',
+    path: '/combo',
+    icon: icon('ic_voucher'),
+  },
 ];
 
 export default navConfig;

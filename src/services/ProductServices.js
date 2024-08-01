@@ -11,6 +11,16 @@ const ProductServices = {
     return null;
   },
 
+  getDataPagination: async (page, size) => {
+    try {
+      const result = await getApi(`product?page=${page}&size=${size}`, '');
+      return result;
+    } catch (error) {
+      console.log(error);
+    }
+    return null;
+  },
+
   getById: async (id) => {
     try {
       const result = await getApi(`product/${id}`, '');
@@ -49,7 +59,7 @@ const ProductServices = {
     }
     return null;
   },
-  
+
   changeImage: async (productId, index, payload) => {
     try {
       const result = await putApi(`product/${productId}/images/${index}`, payload);
