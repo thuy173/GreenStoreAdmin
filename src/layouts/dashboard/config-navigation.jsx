@@ -50,12 +50,12 @@ const navConfig = [
   {
     title: 'Combo',
     path: '/combo',
-    icon: icon('ic_voucher'),
+    icon: icon('ic_combo'),
   },
   {
     title: 'Plan',
     path: '/plan',
-    icon: icon('ic_voucher'),
+    icon: icon('ic_plan'),
   },
 ];
 

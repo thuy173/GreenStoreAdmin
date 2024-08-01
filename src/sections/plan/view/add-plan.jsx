@@ -1,6 +1,5 @@
 import dayjs from 'dayjs';
 import React, { useState, useEffect } from 'react';
-import { Droppable, Draggable, DragDropContext } from 'react-beautiful-dnd';
 
 import CloseIcon from '@mui/icons-material/Close';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -10,13 +9,12 @@ import {
   Button,
   Dialog,
   MenuItem,
-  TextField,
   Container,
+  TextField,
   Typography,
   IconButton,
   DialogTitle,
   DialogContent,
-  DialogActions,
 } from '@mui/material';
 
 import PlanServices from 'src/services/PlanServices';
@@ -33,7 +31,7 @@ const CreatePlanView = () => {
   const [startDate, setStartDate] = useState(dayjs());
   const [schedules, setSchedules] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
-  const [currentSchedule, ] = useState(null);
+  const [currentSchedule, setCurrentSchedule] = useState(null);
   const [alert, setAlert] = useState({ message: null, severity: 'success', isOpen: false });
 
   const showAlert = (severity, message) => {
@@ -56,7 +54,6 @@ const CreatePlanView = () => {
       console.error(error.message);
     }
   };
-
   const fetchCustomerData = async () => {
     try {
       const response = await CustomerServices.getAll();
@@ -71,11 +68,6 @@ const CreatePlanView = () => {
   };
 
   useEffect(() => {
-    fetchComboData();
-    fetchCustomerData();
-  }, []);
-
-  useEffect(() => {
     if (selectedCombo && startDate) {
       const combo = combos.find((c) => c.comboId === selectedCombo);
       if (combo) {
@@ -87,7 +79,11 @@ const CreatePlanView = () => {
           date.setDate(date.getDate() + i);
           newSchedules.push({
             date: date.toISOString().split('T')[0],
-            scheduledProducts: [],
+            scheduledProducts: combo.comboProducts.map((cp) => ({
+              comboProductId: cp.comboProductId,
+              quantity: 1, // Default quantity
+              dayInRegimen: i + 1,
+            })),
           });
         }
         setSchedules(newSchedules);
@@ -95,6 +91,10 @@ const CreatePlanView = () => {
     }
   }, [selectedCombo, startDate, combos]);
 
+  const handleDateClick = (schedule) => {
+    setCurrentSchedule(schedule);
+    setOpenDialog(true);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -125,22 +125,10 @@ const CreatePlanView = () => {
     }
   };
 
-  const handleDragEnd = (result) => {
-    if (!result.destination) return;
-
-    const { source, destination } = result;
-
-    if (source.droppableId === destination.droppableId && source.index === destination.index) {
-      return;
-    }
-
-    const newSchedules = Array.from(schedules);
-    const sourceSchedule = newSchedules[source.droppableId];
-    const destinationSchedule = newSchedules[destination.droppableId];
-    const [removedProduct] = sourceSchedule.scheduledProducts.splice(source.index, 1);
-    destinationSchedule.scheduledProducts.splice(destination.index, 0, removedProduct);
-    setSchedules(newSchedules);
-  };
+  useEffect(() => {
+    fetchComboData();
+    fetchCustomerData();
+  }, []);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -191,51 +179,16 @@ const CreatePlanView = () => {
           </Grid>
           <Grid item xs={12}>
             <Typography variant="h6">Schedules</Typography>
-            <DragDropContext onDragEnd={handleDragEnd}>
-              <Grid container spacing={2}>
-                {schedules.map((schedule, index) => (
-                  <Grid item xs={12} key={index}>
-                    <Droppable droppableId={index.toString()}>
-                      {(provided) => (
-                        <div
-                          {...provided.droppableProps}
-                          ref={provided.innerRef}
-                          style={{ border: '1px solid #ccc', padding: '8px', borderRadius: '4px' }}
-                        >
-                          <Typography variant="h6">{`Day ${index + 1} (${schedule.date})`}</Typography>
-                          {schedule.scheduledProducts.map((product, idx) => (
-                            <Draggable
-                              key={product.comboProductId}
-                              draggableId={product.comboProductId.toString()}
-                              index={idx}
-                            >
-                              {(provide) => (
-                                <div
-                                  ref={provide.innerRef}
-                                  {...provide.draggableProps}
-                                  {...provide.dragHandleProps}
-                                  style={{
-                                    ...provide.draggableProps.style,
-                                    padding: '8px',
-                                    marginBottom: '8px',
-                                    border: '1px solid #ccc',
-                                    borderRadius: '4px',
-                                    backgroundColor: '#f4f4f4',
-                                  }}
-                                >
-                                  <Typography>{`Product ID: ${product.comboProductId}, Quantity: ${product.quantity}`}</Typography>
-                                </div>
-                              )}
-                            </Draggable>
-                          ))}
-                          {provided.placeholder}
-                        </div>
-                      )}
-                    </Droppable>
-                  </Grid>
-                ))}
-              </Grid>
-            </DragDropContext>
+            {schedules.map((schedule, index) => (
+              <Button
+                key={index}
+                variant="outlined"
+                fullWidth
+                onClick={() => handleDateClick(schedule)}
+              >
+                {`Day ${index + 1} (${schedule.date})`}
+              </Button>
+            ))}
           </Grid>
           <Grid item xs={12}>
             <Button variant="contained" color="primary" onClick={handleSubmit}>
@@ -244,7 +197,7 @@ const CreatePlanView = () => {
           </Grid>
         </Grid>
 
-        <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+        <Dialog open={openDialog} onClose={() => setOpenDialog(false)} fullWidth maxWidth="md">
           <DialogTitle>
             Schedule Details
             <IconButton
@@ -261,28 +214,24 @@ const CreatePlanView = () => {
           </DialogTitle>
           <DialogContent>
             {currentSchedule && (
-              <div>
+              <>
                 <Typography variant="h6">{`Date: ${currentSchedule.date}`}</Typography>
-                {currentSchedule.scheduledProducts.map((product) => (
-                  <Typography key={product.comboProductId}>{`Product ID: ${product.comboProductId}, Quantity: ${product.quantity}`}</Typography>
+                {currentSchedule.scheduledProducts.map((product, index) => (
+                  <Typography
+                    key={index}
+                  >{`Product ID: ${product.comboProductId}, Quantity: ${product.quantity}`}</Typography>
                 ))}
-              </div>
+              </>
             )}
           </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setOpenDialog(false)} color="primary">
-              Close
-            </Button>
-          </DialogActions>
         </Dialog>
-
-        <CustomSnackbar
-          open={alert.isOpen}
-          severity={alert.severity}
-          message={alert.message}
-          onClose={handleCloseAlert}
-        />
       </Container>
+      <CustomSnackbar
+        open={alert.isOpen}
+        onClose={handleCloseAlert}
+        message={alert.message}
+        severity={alert.severity}
+      />
     </LocalizationProvider>
   );
 };
