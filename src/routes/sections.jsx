@@ -19,6 +19,8 @@ export const UpdateBlogPage = lazy(() => import('../pages/BlogPage/update'));
 export const VoucherPage = lazy(() => import('../pages/VoucherPage/main'));
 export const ComboPage = lazy(() => import('../pages/ComboPage/main'));
 export const AddComboPage = lazy(() => import('../pages/ComboPage/add'));
+export const PlanPage = lazy(() => import('../pages/PlanPage/main'));
+export const CreatePlanPage = lazy(() => import('../pages/PlanPage/add'));
 
 // ----------------------------------------------------------------------
 
@@ -47,6 +49,8 @@ export default function Router() {
         { path: 'voucher', element: <VoucherPage /> },
         { path: 'combo', element: <ComboPage /> },
         { path: 'combo/add', element: <AddComboPage /> },
+        { path: 'plan', element: <PlanPage /> },
+        { path: 'plan/add', element: <CreatePlanPage /> },
       ],
     },
     {
