@@ -129,9 +129,7 @@ const AddComboView = () => {
 
       if (existingProduct) {
         return prevSelected.map((product) =>
-          product.productId === productId
-            ? { ...product, quantity: product.quantity + 1 }
-            : product
+          product.productId === productId ? { ...product, quantity: product.quantity + 1 } : product
         );
       }
 
@@ -301,7 +299,16 @@ const AddComboView = () => {
                               <Typography variant="h6" component="div">
                                 {product.productName}
                               </Typography>
-                              <Typography variant="body2" color="text.secondary">
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                                sx={{
+                                  display: '-webkit-box',
+                                  WebkitBoxOrient: 'vertical',
+                                  WebkitLineClamp: 3,
+                                  overflow: 'hidden',
+                                }}
+                              >
                                 {product.description}
                               </Typography>
                             </CardContent>
@@ -355,7 +362,9 @@ const AddComboView = () => {
                                   alt={selectedProductData.productName}
                                   sx={{ width: 80 }}
                                 />
-                                <Typography variant="body1">{selectedProductData.productName}</Typography>
+                                <Typography variant="body1">
+                                  {selectedProductData.productName}
+                                </Typography>
                                 <Typography variant="body2" color="text.secondary">
                                   Quantity: {selectedProduct.quantity}
                                 </Typography>

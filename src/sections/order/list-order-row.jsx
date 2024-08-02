@@ -93,14 +93,14 @@ export default function ListOrderRow({
 
   return (
     <>
-      <TableRow hover tabIndex={-1} onClick={handleOpenDetailDialog}>
-        <TableCell align="center">{orderCode}</TableCell>
+      <TableRow hover tabIndex={-1}>
+        <TableCell align="center" onClick={handleOpenDetailDialog}>{orderCode}</TableCell>
 
-        <TableCell align="center">{fullName}</TableCell>
+        <TableCell align="center" onClick={handleOpenDetailDialog}>{fullName}</TableCell>
 
         <TableCell align="center">{phoneNumber}</TableCell>
 
-        <TableCell align="center">{shippingAddress}</TableCell>
+        <TableCell align="center" onClick={handleOpenDetailDialog}>{shippingAddress}</TableCell>
 
         <TableCell align="center">{totalAmount}</TableCell>
 

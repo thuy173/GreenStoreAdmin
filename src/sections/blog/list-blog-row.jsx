@@ -97,7 +97,18 @@ export default function ListBlogRow({
           <img src={thumbnail} alt={thumbnail} style={{ width: '100px', objectFit: 'cover' }} />
         </TableCell>
         <TableCell align="center">{title}</TableCell>
-        <TableCell align="center">{description}</TableCell>
+        <TableCell align="center">
+          <Typography
+            sx={{
+              display: '-webkit-box',
+              WebkitBoxOrient: 'vertical',
+              WebkitLineClamp: 3,
+              overflow: 'hidden',
+            }}
+          >
+            {description}
+          </Typography>
+        </TableCell>
         <TableCell align="center">{formatDate(createAt)}</TableCell>
 
         <TableCell align="center">

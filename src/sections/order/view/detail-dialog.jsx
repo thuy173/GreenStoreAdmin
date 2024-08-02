@@ -101,7 +101,17 @@ export default function DetailOrder({ initialValues }) {
                 />
                 <Box>
                   <Typography variant="h6">{item.productName}</Typography>
-                  <Typography variant="body2">{item.description}</Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      display: '-webkit-box',
+                      WebkitBoxOrient: 'vertical',
+                      WebkitLineClamp: 3,
+                      overflow: 'hidden',
+                    }}
+                  >
+                    {item.description}
+                  </Typography>
                   <Typography variant="body2">Quantity: {item.quantity}</Typography>
                   <Typography variant="body2">Price: ${item.price}</Typography>
                   <Typography variant="body2">Total Price: ${item.totalPrice}</Typography>
