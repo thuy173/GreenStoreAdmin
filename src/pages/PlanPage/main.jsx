@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux';
 import { Helmet } from 'react-helmet-async';
 import { Navigate } from 'react-router-dom';
 
-import ListPlanView from 'src/sections/plan/view/list-plan-view';
+import BigCalendar from 'src/sections/plan/view/list-plan-view';
 
 // ----------------------------------------------------------------------
 
@@ -19,7 +19,7 @@ const PlanPage = () => {
         <title>Plan | GreenStore</title>
       </Helmet>
 
-      <ListPlanView />
+      <BigCalendar />
     </>
   );
 };
