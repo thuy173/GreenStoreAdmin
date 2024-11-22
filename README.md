@@ -9,6 +9,8 @@ This is a modern web application built using **ReactJS** with **JavaScript (JSX)
 - ⚡ **JaveScript (JSX)**: Type-safe JavaScript for better development experience.
 - 📦 **ESBuild**: Lightning-fast bundling and compilation.
 - 🔄 **Hot Module Replacement (HMR)**: Fast feedback during development.
+  
+- Management product, voucher, order status, customer, blog, plan, login admin...
 
 ## Prerequisites
 
@@ -37,3 +39,11 @@ The app will be available at http://localhost:3031
 ## Yarn install
 
 https://classic.yarnpkg.com/en/docs/install#windows-stable
+
+🎨Page
+![Screenshot 2024-11-04 173021](https://github.com/user-attachments/assets/7a2bfa09-6e66-4a9b-8dc2-93358c300bff)
+
+![Screenshot 2024-11-04 173425](https://github.com/user-attachments/assets/2c464205-b158-4cc0-ba86-99b57ae85277)
+![Screenshot 2024-11-04 173240](https://github.com/user-attachments/assets/e5ee108a-0448-4b93-adce-0b05db3bfbac)
+![Screenshot 2024-11-04 173046](https://github.com/user-attachments/assets/1092388e-497e-43db-9de2-ec399beeba16)
+
